@@ -2,6 +2,13 @@ import React from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, Text, Switch, View} from 'react-native';
 
 export default class SettingsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isHidden: true,
+    };
+  }
+
   static navigationOptions = {
     title: 'Settings',
     headerStyle: {
@@ -17,20 +24,46 @@ export default class SettingsScreen extends React.Component {
     console.log("User Logged Out.")
   }
 
+  showOnLockScreen() {
+    console.log("Switch Flipped")
+  }
+
   render() {
     return (
       <ScrollView style={styles.container}>
+        <Text style={styles.title}>Notifications</Text>
+        <View style={styles.switchLineContainer}>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Enable Notifications</Text>
+          </View>
+          <View style={styles.switchContainer}>
+            <Switch style={styles.switch}
+                    onValueChange={value => this.setState({isHidden: !value})}
+                    value={!this.state.isHidden}
+            ></Switch>
+          </View>
+        </View>
+        <HideView style={styles.hideViewContainer}
+                  hide={this.state.isHidden}>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>Show on Lock Screen</Text>
+          </View>
+          <View style={styles.switchContainer}>
+            <Switch style={styles.switch}
+                    onValueChange={() => this.showOnLockScreen()}
+            ></Switch>
+          </View>  
+        </HideView>
         <Text style={styles.title}>Privacy</Text>
         <View style={styles.switchLineContainer}>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>Protect Your Notifications</Text>
+            <Text style={styles.text}>Protect Your Posts</Text>
           </View>
           <View style={styles.switchContainer}>
             <Switch style={styles.switch}></Switch>
           </View>
         </View>
         <Text style={styles.description}>Use your phone's Touch ID or passcode to protect your posts and replies so only you can view them.</Text>
-        <Text style={styles.title}>Second Setting</Text>
         <TouchableOpacity style={styles.button}
                   onPress={() => this.logOut()}
                   underlayColor='#fff'>
@@ -40,6 +73,18 @@ export default class SettingsScreen extends React.Component {
     );
   }
 }
+
+const HideView = (props) => {
+  const { children, hide, style } = props;
+  if (hide) {
+    return null;
+  }
+  return (
+    <View {...this.props} style={style}>
+      { children }
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -63,6 +108,21 @@ const styles = StyleSheet.create({
     height: 50,
     paddingTop: 10,
     paddingBottom: 10,
+    borderColor: '#000',
+    borderTopWidth: 0.25,
+    borderBottomWidth: 0.25,
+  },
+  hideViewContainer: {
+    backgroundColor: '#fff',
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: 50,
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderColor: '#000',
+    borderBottomWidth: 0.25,
   },
   textContainer: {
     justifyContent: 'center',
@@ -79,12 +139,6 @@ const styles = StyleSheet.create({
     paddingRight: 25,
   },
   switch: {
-    
-  },
-  button: { 
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor:'#fff',
   },
   description: {
     color:'#000',
@@ -94,6 +148,13 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 20,
     fontSize: 16,
+  },
+  button: { 
+    paddingTop: 8,
+    paddingBottom: 8,
+    backgroundColor:'#fff',
+    borderTopWidth: 0.25,
+    borderBottomWidth: 0.25,
   },
   logoutText: {
     color:'red',
