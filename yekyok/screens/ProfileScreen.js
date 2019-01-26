@@ -57,8 +57,11 @@ const styles = StyleSheet.create({
   greyBar: {
     flexDirection:"row",
     backgroundColor: '#ededed',
+    marginLeft: 20,
+    marginRight: 20,
     marginBottom: 20,
     height: 120,
+    borderRadius: 25,
   },
   userDate: {
     paddingLeft: 25,
@@ -71,7 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textTransform: 'uppercase',
-    paddingTop: 30,
+    paddingTop: 35,
     paddingLeft: 15,
     paddingRight: 30,
     flexWrap: 'wrap',
