@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     height: 50,
     paddingTop: 10,
     paddingBottom: 10,
-    borderColor: '#000',
+    borderColor: '#ededed',
     borderTopWidth: 0.25,
     borderBottomWidth: 0.25,
   },
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     height: 50,
     paddingTop: 10,
     paddingBottom: 10,
-    borderColor: '#000',
+    borderColor: '#ededed',
     borderBottomWidth: 0.25,
   },
   textContainer: {
@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
     borderTopWidth: 0.25,
     borderBottomWidth: 0.25,
+    borderColor: '#ededed',
   },
   logoutText: {
     color:'red',
