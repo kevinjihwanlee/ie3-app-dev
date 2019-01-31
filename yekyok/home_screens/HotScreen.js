@@ -1,1 +1,0 @@
-export default class HotScreen extends React.Component {}
