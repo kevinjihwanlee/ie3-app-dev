@@ -1,0 +1,1 @@
+export default class MapScreen extends React.Component {}

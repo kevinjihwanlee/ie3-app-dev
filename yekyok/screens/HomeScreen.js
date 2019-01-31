@@ -1,12 +1,17 @@
 import React from 'react';
 import {ScrollView,StyleSheet,View} from 'react-native';
 import MapView from 'react-native-maps'
+import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+
+import MapScreen from '../home_screens/MapScreen';
+import NewScreen from '../home_screens/NewScreen';
+import HotScreen from '../home_screens/HotScreen';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Home',
     headerStyle: {
-      backgroundColor: '#4E2A84', // northwestern purple
+      backgroundColor: '#4E2A84',
     },
     headerTitleStyle: {
       fontWeight: 'bold',

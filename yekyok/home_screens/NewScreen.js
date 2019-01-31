@@ -1,0 +1,1 @@
+export default class NewScreen extends React.Component {}
