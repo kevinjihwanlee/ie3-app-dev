@@ -3,7 +3,7 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://c8-xpk.anonymous.yekyok.exp.direct",
+  "packagerNgrokUrl": "https://packager.c8-xpk.anonymous.yekyok.exp.direct",
+  "ngrokPid": 12406
 }

@@ -29,7 +29,6 @@ const HomeStack = createMaterialTopTabNavigator({
       fontFamily: 'space-mono',
       fontWeight: 'bold',
     },
-    activeTintColor: 'white',
   }
 });
 
