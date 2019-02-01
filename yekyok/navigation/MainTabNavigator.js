@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import { createStackNavigator, createMaterialTopTabNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
 import LinksScreen from '../screens/LinksScreen';
@@ -10,10 +10,27 @@ import MapScreen from '../screens/home_screens/MapScreen';
 import NewScreen from '../screens/home_screens/NewScreen';
 import HotScreen from '../screens/home_screens/HotScreen';
 
-const HomeStack = createStackNavigator({
+const HomeStack = createMaterialTopTabNavigator({
   Map: MapScreen,
   New: NewScreen,
   Hot: HotScreen
+},
+{
+  navigationOptions: {},
+  tabBarOptions: {
+    style: {
+      backgroundColor: '#4E2A84',
+      height: 64,
+      alignContent: 'center',
+    },
+    labelStyle: {
+      paddingTop: 17,
+      fontSize: 14,
+      fontFamily: 'space-mono',
+      fontWeight: 'bold',
+    },
+    activeTintColor: 'white',
+  }
 });
 
 HomeStack.navigationOptions = {

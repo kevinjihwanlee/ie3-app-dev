@@ -1,18 +1,11 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 import MapView from 'react-native-maps'
 
 export default class MapScreen extends React.Component {
     static navigationOptions = {
-        title: 'Home',
-        headerStyle: {
-          backgroundColor: '#4E2A84',
-        },
-        headerTitleStyle: {
-          fontWeight: 'bold',
-          color: '#fff'
-        },
-      };
+      title: 'Map',
+    };
 
     constructor(props) {
         super(props)
@@ -37,11 +30,12 @@ export default class MapScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <MapView style={styles.mapContainer}
-                  region = {this.state.region}
-                  onRegionChange = {() => this.onRegionChange}
-                  showsUserLocation = {true}>
-                </MapView>
+              <View></View>
+              <MapView style={styles.mapContainer}
+                region = {this.state.region}
+                onRegionChange = {() => this.onRegionChange}
+                showsUserLocation = {true}>
+              </MapView>
             </View>
         )
     }
