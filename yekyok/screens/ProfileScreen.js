@@ -31,13 +31,9 @@ export default class ProfileScreen extends React.Component {
       <Text style={styles.headings}>starred events</Text>
       <View style={styles.divider}/>
       <EventItem></EventItem>
-      <View style={styles.greyBar}></View>
       <Text style={styles.headings}>past events</Text>
       <View style={styles.divider}/>
-      <View style={styles.greyBar}></View>
-      <View style={styles.greyBar}></View>
-      <View style={styles.greyBar}></View>
-      <View style={styles.greyBar}></View>
+      <EventItem></EventItem>
       </ScrollView>
     );
   }
