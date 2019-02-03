@@ -1,6 +1,7 @@
 import React from 'react';
 import { Platform, Text, View, ScrollView, StyleSheet } from 'react-native';
 import { Icon } from 'expo';
+import { EventItem } from '../components/EventItem';
 
 export default class ProfileScreen extends React.Component {
   static navigationOptions = {
@@ -29,14 +30,10 @@ export default class ProfileScreen extends React.Component {
         </View>
       <Text style={styles.headings}>starred events</Text>
       <View style={styles.divider}/>
-      <View style={styles.greyBar}></View>
-      <View style={styles.greyBar}></View>
+      <EventItem></EventItem>
       <Text style={styles.headings}>past events</Text>
       <View style={styles.divider}/>
-      <View style={styles.greyBar}></View>
-      <View style={styles.greyBar}></View>
-      <View style={styles.greyBar}></View>
-      <View style={styles.greyBar}></View>
+      <EventItem></EventItem>
       </ScrollView>
     );
   }
