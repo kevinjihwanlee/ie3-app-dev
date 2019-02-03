@@ -18,7 +18,7 @@ export default class ProfileScreen extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
-      <View style={styles.header}>
+       <View style={styles.header}>
         <Icon.Ionicons
           name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
           size={110}
