@@ -31,6 +31,7 @@ export default class ProfileScreen extends React.Component {
       <Text style={styles.headings}>starred events</Text>
       <View style={styles.divider}/>
       <EventItem></EventItem>
+      <View style={{height: 20}}/>
       <Text style={styles.headings}>past events</Text>
       <View style={styles.divider}/>
       <EventItem></EventItem>
@@ -84,8 +85,6 @@ const styles = StyleSheet.create({
   divider: {
     borderTopColor: '#D3D3D3',
     borderTopWidth: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
   },
   profileIcon: {
     marginTop: 10,
