@@ -13,15 +13,16 @@
   "dependencies": {
     "@expo/samples": "2.1.1",
     "expo": "^32.0.0",
-    "expo-cli": "^2.7.0",
+    "expo-cli": "^2.10.0",
     "node": "^11.6.0",
     "npm": "^6.7.0",
     "react": "^16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "react-native-maps": "^0.23.0",
-    "whatwg-fetch": "^2.0.4",
+    "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^1.0.0",
-    "react-navigation": "^3.0.9"
+    "react-native-maps": "^0.23.0",
+    "react-navigation": "^3.0.9",
+    "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",
