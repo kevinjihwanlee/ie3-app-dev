@@ -15,6 +15,8 @@ let events = [
     saved: 32,
     latitude: 42.05336,
     longitude: -87.672662,
+    is_saved: true, // for if a user has saved that event
+    uri: '' // we should pass in a unique image url here for each image to display
   },
   {
     id: '2',
@@ -29,6 +31,7 @@ let events = [
     saved: 2,
     latitude: 42.05336,
     longitude: -87.672662,
+    is_saved: true,
   },
   {
     id: '3',
@@ -43,6 +46,7 @@ let events = [
     saved: 45,
     latitude: 42.05336,
     longitude: -87.672662,
+    is_saved: true,
   },
   {
     id: '4',

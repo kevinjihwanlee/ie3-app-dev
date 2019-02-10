@@ -31,6 +31,7 @@ const hot_events = [
         saved: 45,
         latitude: 42.05336,
         longitude: -87.672662,
+        is_saved: true
     },
     {
         id: '5',
@@ -59,6 +60,7 @@ const hot_events = [
       saved: 32,
       latitude: 42.05336,
       longitude: -87.672662,
+      is_saved: true
     },
     {
       id: '2',
@@ -73,6 +75,7 @@ const hot_events = [
       saved: 2,
       latitude: 42.05336,
       longitude: -87.672662,
+      is_saved: true
     }
   ];
   

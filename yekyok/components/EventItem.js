@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Accordion from 'react-native-collapsible/Accordion';
+import { Ionicons } from '@expo/vector-icons';
 
 export class EventItem extends React.Component {
   state = {
@@ -11,13 +12,14 @@ export class EventItem extends React.Component {
     return (
         <ListItem
                 containerStyle={styles.greyBar}
-                leftAvatar={{ source: { uri: 'www.google.com' } }}
+                leftAvatar={{size:'large', source: { uri: 'https://chinesenewyear.imgix.net/assets/images/21-things-you-didnt-know-about-chinese-new-year/chinese-new-year-lanterns.jpg?q=50&w=640&h=360&auto=format' } }}
                 title={event.name}
-                titleStyle={{width:210, fontWeight:'bold'}}
-                subtitle={(event.description.length < 90) ? event.description : (event.description.substring(0, 85) + "...")}
-                subtitleStyle={{width: 210}}
-                rightSubtitle={event.date_event}
-                badge={{value: event.saved, badgeStyle: {backgroundColor: '#4E2A84', top: -35}}}
+                titleStyle={{width:230, fontWeight:'bold'}}
+                subtitle={(event.description.length < 95) ? event.description : (event.description.substring(0, 85) + "...")}
+                subtitleStyle={{width: 230}}
+                rightSubtitle={event.is_saved ? '★ ' + event.saved : '☆ ' + event.saved}
+                rightSubtitleStyle={{top: 35, left: 60}}
+                badge={{value: event.date_event, badgeStyle: {backgroundColor: '#4E2A84', top: -35}}}
         />
     );
   };
@@ -26,12 +28,12 @@ export class EventItem extends React.Component {
     return (
       <ListItem
               containerStyle={styles.greyBarExpanded}
-              title={(event.description.length < 90) ? undefined : ("..." + event.description.substring(85) + "\n")}
-              titleStyle={{width: 230, paddingLeft:10, paddingTop:20, fontSize:15}}
+              title={(event.description.length < 95) ? undefined : ("..." + event.description.substring(85) + "\n")}
+              titleStyle={{width: 240, paddingLeft:10, paddingTop:20, fontSize:15}}
               subtitle={'@ ' + event.location}
               subtitleStyle={{fontWeight:'bold', paddingLeft:10, width: 230, textAlignVertical:'top'}}
-              rightSubtitle={event.start_time + ' to ' + event.end_time}
-              rightSubtitleStyle={{paddingTop:20}}
+              rightSubtitle={event.start_time +  '-\n' + event.end_time}
+              rightSubtitleStyle={{paddingTop:20, textAlign:'center'}}
       />
     );
   };

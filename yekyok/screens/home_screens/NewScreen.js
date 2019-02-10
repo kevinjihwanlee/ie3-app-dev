@@ -31,6 +31,7 @@ const new_events = [
       saved: 2,
       latitude: 42.05336,
       longitude: -87.672662,
+      is_saved: true
     },
     {
       id: '3',
@@ -45,6 +46,7 @@ const new_events = [
       saved: 45,
       latitude: 42.05336,
       longitude: -87.672662,
+      is_saved: true
     },
     {
       id: '1',
@@ -59,6 +61,7 @@ const new_events = [
       saved: 32,
       latitude: 42.05336,
       longitude: -87.672662,
+      is_saved: true
     }
   ];
   

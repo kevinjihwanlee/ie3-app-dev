@@ -2,7 +2,7 @@ import React from 'react';
 import { AppRegistry, FlatList, Platform, icon, Text, View, ScrollView, StyleSheet } from 'react-native';
 import { Icon } from 'expo';
 
-export default class Hotscreen extends React.Component {
+export default class Hotscreen2 extends React.Component {
   static navigationOptions = {
     title: 'Hot',
     headerStyle: {
