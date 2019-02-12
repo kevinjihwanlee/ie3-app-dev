@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, TextInput, ScrollView} from 'react-native';
 import MapView from 'react-native-maps';
 import Overlay from 'react-native-modal-overlay';
 import {Calendar} from 'react-native-calendars';
@@ -31,6 +31,8 @@ export default class MapScreen extends React.Component {
       eventNameTextColor: '#D3D3D3',
       eventDescriptionText: 'Description',
       eventDescriptionTextColor: '#D3D3D3',
+      customLocationText: 'Location',
+      customLocationTextColor: '#D3D3D3',
       calendarVisible: false,
       currDate: this.getTodayDate(),
       calendarSelected: {},
@@ -105,6 +107,14 @@ export default class MapScreen extends React.Component {
     return yyyy + '-' + mm + '-' + dd
   }
 
+  //Fires on focusing the custom location field
+  onCustomLocationFocus() {
+    this.setState({
+      customLocationText: '',
+      customLocationTextColor: '#000',
+    })
+  }
+
   //Fires on pressing the submit button
   onSubmit() {
     let m = this.state.markers
@@ -148,7 +158,7 @@ export default class MapScreen extends React.Component {
         <Overlay visible={this.state.modalVisible}
           onClose={this.onClose}
           childrenWrapperStyle={styles.modalContainer}>
-          <View style={styles.modalViewContainer}>
+          <ScrollView style={styles.modalViewContainer}>
             <View style={styles.titleContainer}>
               <TextInput style = {{width: 245,
                                   height: 50,
@@ -160,6 +170,7 @@ export default class MapScreen extends React.Component {
                 onFocus = {() => this.onTitleFocus()}>
               </TextInput>
             </View>
+
             <View style={styles.descriptionContainer}>
                 <TextInput style = {{width: 245,
                                     height: 100,
@@ -171,6 +182,7 @@ export default class MapScreen extends React.Component {
                   onFocus = {() => this.onDescriptionFocus()}>
                 </TextInput>
             </View>
+
             <TouchableOpacity style={styles.modalSubmit}
               onPress= {() => this.onCalendar()}>
                   <Text>Show Calendar</Text>
@@ -182,15 +194,29 @@ export default class MapScreen extends React.Component {
                 markedDates = {this.state.calendarSelected}
                 onDayPress={(date) => this.onDateChange(date)}/>
             </Overlay>
+
+            <View style={styles.locationContainer}>
+                <TextInput style = {{width: 245,
+                                    height: 100,
+                                    fontSize: 14,
+                                    color: this.state.customLocationTextColor}}
+                  multiline={true}
+                  value = {this.state.customLocationText}
+                  onChangeText = {(text) => {this.setState({customLocationText:text})}}
+                  onFocus = {() => this.onCustomLocationFocus()}>
+                </TextInput>
+            </View>
+
             <TouchableOpacity style={styles.modalSubmit}
               onPress = {() => this.onSubmit()}>
               <Text>Create Event</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.modalCancel}
               onPress = {() => this.onClose()}>
               <Text>Cancel</Text>
             </TouchableOpacity>
-          </View>
+          </ScrollView>
         </Overlay>
         <MapView style={styles.mapContainer}
           region = {this.state.region}
@@ -243,6 +269,16 @@ const styles = StyleSheet.create({
       borderRadius: 3,
       width: 260,
       height: 100,
+    },
+    locationContainer: {
+      alignSelf: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#000',
+      borderRadius: 5,
+      width: 260,
+      height: 50,
+      marginTop: 10,
     },
     modalSubmit: {
       alignSelf: 'center',
