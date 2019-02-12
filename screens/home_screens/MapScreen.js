@@ -36,6 +36,7 @@ export default class MapScreen extends React.Component {
       calendarVisible: false,
       currDate: this.getTodayDate(),
       calendarSelected: {},
+      timePickerVisible: false,
     }
   }
 
@@ -100,13 +101,6 @@ export default class MapScreen extends React.Component {
     })
   }
 
-  //fires when the calendar is closed
-  onCloseCalendar() {
-    this.setState({
-      calendarVisible: false,
-    })
-  }
-
   //fires when another day on the calendar is pressed
   onDateChange(date) {
     let selected = {}
@@ -125,6 +119,26 @@ export default class MapScreen extends React.Component {
     if (dd < 10) {dd = '0' + dd}
     if (mm < 10) {mm = '0' + mm}
     return yyyy + '-' + mm + '-' + dd
+  }
+
+  //fires when the calendar is closed
+  onCloseCalendar() {
+    this.setState({
+      calendarVisible: false,
+    })
+  }
+
+  //Fires on pressing the calendar button
+  onTimePicker() {
+    this.setState({
+      timePickerVisible: true,
+    })
+  }
+
+  onCloseTimePicker() {
+    this.setState({
+      timePickerVisible: false,
+    })
   }
 
   //Fires on focusing the custom location field
@@ -147,6 +161,7 @@ export default class MapScreen extends React.Component {
 
   //Fires on pressing the submit button
   onSubmit() {
+    //save everything
     let m = this.state.markers
     m.push({
       id: m.length,
@@ -158,12 +173,15 @@ export default class MapScreen extends React.Component {
 
   //Fires on closing of the Modal
   onClose = () => this.setState({calendarVisible: false,
-                                modalVisible: false, 
+                                modalVisible: false,
                                 eventNameText: 'Event Name',
                                 eventNameTextColor: '#D3D3D3',
                                 eventDescriptionText: 'Description',
                                 eventDescriptionTextColor: '#D3D3D3',
-                                calendarSelected: {}})
+                                calendarSelected: {},
+                                customLocationText: 'Location',
+                                customLocationTextColor: '#D3D3D3',
+                              })
 
   //Method for removing markers; not used yet
   removeMarker(id) {
@@ -225,6 +243,15 @@ export default class MapScreen extends React.Component {
                 date = {this.state.currDate}
                 markedDates = {this.state.calendarSelected}
                 onDayPress={(date) => this.onDateChange(date)}/>
+            </Overlay>
+
+            <TouchableOpacity style={styles.modalSubmit}
+              onPress= {() => this.onTimePicker()}>
+                  <Text>Show Time Picker</Text>
+            </TouchableOpacity>
+            <Overlay visible = {this.state.timePickerVisible}
+              onClose={() => this.onCloseTimePicker()} closeOnTouchOutside>
+              <Text>UHH</Text>
             </Overlay>
 
             <View style={styles.locationContainer}>
@@ -321,3 +348,15 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
     },
   });
+
+
+/*
+Things to do:
+-Time select
+-invite-only and list of invitees
+-Save info in events
+
+-Save events
+-Delete/edit events
+-Style
+*/
