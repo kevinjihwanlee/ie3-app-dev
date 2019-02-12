@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, TouchableOpacity, TextInput, ScrollView} from 'r
 import MapView from 'react-native-maps';
 import Overlay from 'react-native-modal-overlay';
 import {Calendar} from 'react-native-calendars';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 export default class MapScreen extends React.Component {
   static navigationOptions = {
@@ -135,6 +136,12 @@ export default class MapScreen extends React.Component {
     })
   }
 
+  onConfirmTimePicker() {
+    this.setState({
+      timePickerVisible: false,
+    })
+  }
+
   onCloseTimePicker() {
     this.setState({
       timePickerVisible: false,
@@ -249,10 +256,14 @@ export default class MapScreen extends React.Component {
               onPress= {() => this.onTimePicker()}>
                   <Text>Show Time Picker</Text>
             </TouchableOpacity>
-            <Overlay visible = {this.state.timePickerVisible}
-              onClose={() => this.onCloseTimePicker()} closeOnTouchOutside>
-              <Text>UHH</Text>
-            </Overlay>
+            <DateTimePicker
+              mode="time"
+              titleIOS="Start Time"
+              is24Hour={false}
+              isVisible={this.state.timePickerVisible}
+              onConfirm={() => this.onConfirmTimePicker()}
+              onCancel={() => this.onCloseTimePicker()}
+            />
 
             <View style={styles.locationContainer}>
                 <TextInput style = {{width: 245,
