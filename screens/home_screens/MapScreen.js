@@ -60,12 +60,32 @@ export default class MapScreen extends React.Component {
     })
   }
 
+  //Fires on defocusing the description field
+  onTitleBlur() {
+    if (this.state.eventNameText === '') {
+      this.setState({
+        eventNameText: 'EventName',
+        eventNameTextColor: '#D3D3D3',
+      })
+    }
+  }
+
   //Fires on clicking the Description TextInput
   onDescriptionFocus() {
     this.setState({
       eventDescriptionText: '',
       eventDescriptionTextColor: '#000',
     })
+  }
+
+  //Fires on defocusing the description field
+  onDescriptionBlur() {
+    if (this.state.eventDescriptionText === '') {
+      this.setState({
+        eventDescriptionText: 'Description',
+        eventDescriptionTextColor: '#D3D3D3',
+      })
+    }
   }
 
   //Fires on pressing the calendar button
@@ -113,6 +133,16 @@ export default class MapScreen extends React.Component {
       customLocationText: '',
       customLocationTextColor: '#000',
     })
+  }
+
+  //Fires on defocusing the custom location field
+  onCustomLocationBlur() {
+    if (this.state.customLocationText === '') {
+      this.setState({
+        customLocationText: 'Location',
+        customLocationTextColor: '#D3D3D3',
+      })
+    }
   }
 
   //Fires on pressing the submit button
@@ -167,7 +197,8 @@ export default class MapScreen extends React.Component {
                 multiline={false}
                 value = {this.state.eventNameText}
                 onChangeText = {(text) => {this.setState({eventNameText:text})}}
-                onFocus = {() => this.onTitleFocus()}>
+                onFocus = {() => this.onTitleFocus()}
+                onBlur = {() => this.onTitleBlur()}>
               </TextInput>
             </View>
 
@@ -179,7 +210,8 @@ export default class MapScreen extends React.Component {
                   multiline={true}
                   value = {this.state.eventDescriptionText}
                   onChangeText = {(text) => {this.setState({eventDescriptionText:text})}}
-                  onFocus = {() => this.onDescriptionFocus()}>
+                  onFocus = {() => this.onDescriptionFocus()}
+                  onBlur = {() => this.onDescriptionBlur()}>
                 </TextInput>
             </View>
 
@@ -197,13 +229,14 @@ export default class MapScreen extends React.Component {
 
             <View style={styles.locationContainer}>
                 <TextInput style = {{width: 245,
-                                    height: 100,
+                                    height: 35,
                                     fontSize: 14,
                                     color: this.state.customLocationTextColor}}
-                  multiline={true}
+                  multiline={false}
                   value = {this.state.customLocationText}
                   onChangeText = {(text) => {this.setState({customLocationText:text})}}
-                  onFocus = {() => this.onCustomLocationFocus()}>
+                  onFocus = {() => this.onCustomLocationFocus()}
+                  onBlur = {() => this.onCustomLocationBlur()}>
                 </TextInput>
             </View>
 
@@ -277,15 +310,14 @@ const styles = StyleSheet.create({
       borderColor: '#000',
       borderRadius: 5,
       width: 260,
-      height: 50,
-      marginTop: 10,
+      height: 35,
     },
     modalSubmit: {
       alignSelf: 'center',
       paddingTop: 15,
+      paddingBottom: 15,
     },
     modalCancel: {
       alignSelf: 'center',
-      paddingTop: 15,
     },
   });
