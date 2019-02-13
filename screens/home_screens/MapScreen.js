@@ -25,7 +25,8 @@ export default class MapScreen extends React.Component {
         latitudeDelta: 0.01,
         longitudeDelta: 0.005,
       },
-      markers: this.setInitialMarkers(),
+      events: this.setInitialEvents(),
+      //markers: this.setInitialMarkers(),
       modalVisible: false,
       recentLocation: null,
       eventNameText: 'Event Name',
@@ -42,7 +43,7 @@ export default class MapScreen extends React.Component {
   }
 
   //Sets the list of initial markers to appear on the map
-  setInitialMarkers() { //should get list of current events and set here
+  setInitialEvents() { //should get list of current events and set here
     return []
   }
 
@@ -170,10 +171,14 @@ export default class MapScreen extends React.Component {
   //Fires on pressing the submit button
   onSubmit() {
     //save everything
-    let m = this.state.markers
+    let m = this.state.events
     m.push({
+      title: this.state.eventNameText,
+      description: this.state.eventDescriptionText,
+      location: this.state.customLocationText,
       id: m.length,
       coordinate: this.state.recentLocation,
+      //also add start/end times and dates
     })
     this.setState({markers: m})
     this.onClose()
@@ -295,7 +300,7 @@ export default class MapScreen extends React.Component {
           onRegionChange = {() => this.onRegionChange}
           onPress = {this.onClick.bind(this)}
           showsUserLocation = {true}>
-          {this.state.markers.map((marker) => (
+          {this.state.events.map((marker) => (
             <MapView.Marker
               key = {marker.id}
               coordinate = {marker.coordinate}/>
