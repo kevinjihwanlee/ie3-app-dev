@@ -136,7 +136,8 @@ export default class MapScreen extends React.Component {
     })
   }
 
-  onConfirmTimePicker() {
+  onConfirmTimePicker(date) {
+    console.log(date)
     this.setState({
       timePickerVisible: false,
     })
@@ -261,7 +262,7 @@ export default class MapScreen extends React.Component {
               titleIOS="Start Time"
               is24Hour={false}
               isVisible={this.state.timePickerVisible}
-              onConfirm={() => this.onConfirmTimePicker()}
+              onConfirm={(date) => this.onConfirmTimePicker(date)}
               onCancel={() => this.onCloseTimePicker()}
             />
 
