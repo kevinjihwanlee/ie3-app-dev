@@ -26,7 +26,6 @@ export default class MapScreen extends React.Component {
         longitudeDelta: 0.005,
       },
       events: this.setInitialEvents(),
-      //markers: this.setInitialMarkers(),
       modalVisible: false,
       recentLocation: null,
       eventNameText: 'Event Name',
@@ -39,6 +38,7 @@ export default class MapScreen extends React.Component {
       currDate: this.getTodayDate(),
       calendarSelected: {},
       timePickerVisible: false,
+      datetimeSelected: new Date(),
     }
   }
 
@@ -110,6 +110,7 @@ export default class MapScreen extends React.Component {
     this.setState({
       calendarSelected: selected
     })
+    console.log(selected)
   }
 
   //Returns today's date in string format
@@ -130,20 +131,22 @@ export default class MapScreen extends React.Component {
     })
   }
 
-  //Fires on pressing the calendar button
+  //Fires on pressing the time picker button
   onTimePicker() {
     this.setState({
       timePickerVisible: true,
     })
   }
 
-  onConfirmTimePicker(date) {
-    console.log(date)
+  //Fires on confirming in the time picker
+  onConfirmTimePicker(datetime) {
     this.setState({
+      datetimeSelected: datetime,
       timePickerVisible: false,
     })
   }
 
+  //fires on closing of time picker
   onCloseTimePicker() {
     this.setState({
       timePickerVisible: false,
@@ -176,9 +179,10 @@ export default class MapScreen extends React.Component {
       title: this.state.eventNameText,
       description: this.state.eventDescriptionText,
       location: this.state.customLocationText,
-      id: m.length,
+      id: m[m.length - 1].id + 1,
       coordinate: this.state.recentLocation,
-      //also add start/end times and dates
+      day: this.state.calendarSelected,
+      time: this.state.datetimeSelected,
     })
     this.setState({markers: m})
     this.onClose()
@@ -269,19 +273,20 @@ export default class MapScreen extends React.Component {
               isVisible={this.state.timePickerVisible}
               onConfirm={(date) => this.onConfirmTimePicker(date)}
               onCancel={() => this.onCloseTimePicker()}
+              date={new Date(this.state.datetimeSelected)}
             />
 
             <View style={styles.locationContainer}>
-                <TextInput style = {{width: 245,
-                                    height: 35,
-                                    fontSize: 14,
-                                    color: this.state.customLocationTextColor}}
-                  multiline={false}
-                  value = {this.state.customLocationText}
-                  onChangeText = {(text) => {this.setState({customLocationText:text})}}
-                  onFocus = {() => this.onCustomLocationFocus()}
-                  onBlur = {() => this.onCustomLocationBlur()}>
-                </TextInput>
+              <TextInput style = {{width: 245,
+                                  height: 35,
+                                  fontSize: 14,
+                                  color: this.state.customLocationTextColor}}
+                multiline={false}
+                value = {this.state.customLocationText}
+                onChangeText = {(text) => {this.setState({customLocationText:text})}}
+                onFocus = {() => this.onCustomLocationFocus()}
+                onBlur = {() => this.onCustomLocationBlur()}>
+              </TextInput>
             </View>
 
             <TouchableOpacity style={styles.modalSubmit}
