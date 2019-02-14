@@ -19,12 +19,6 @@ export default class MapScreen extends React.Component {
   //Sets state upon screen rendering
   getInitialState() {
     return {
-      region: {
-        latitude: 42.055984,
-        longitude: -87.675171,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.005,
-      },
       events: this.setInitialEvents(),
       modalVisible: false,
       recentLocation: null,
@@ -53,6 +47,10 @@ export default class MapScreen extends React.Component {
       modalVisible: true,
       recentLocation: e.nativeEvent.coordinate
     })
+  }
+
+  onMarkerClick(i) {
+    console.log(i)
   }
 
   //Fires on clicking the Title TextInput
@@ -175,11 +173,12 @@ export default class MapScreen extends React.Component {
   onSubmit() {
     //save everything
     let m = this.state.events
+    let newID = (m.length === 0 ? 1 : m[m.length - 1].id + 1)
     m.push({
       title: this.state.eventNameText,
       description: this.state.eventDescriptionText,
       location: this.state.customLocationText,
-      id: m[m.length - 1].id + 1,
+      id: newID,
       coordinate: this.state.recentLocation,
       day: this.state.calendarSelected,
       time: this.state.datetimeSelected,
@@ -198,6 +197,8 @@ export default class MapScreen extends React.Component {
                                 calendarSelected: {},
                                 customLocationText: 'Location',
                                 customLocationTextColor: '#D3D3D3',
+                                timePickerVisible: false,
+                                datetimeSelected: new Date(),
                               })
 
   //Method for removing markers; not used yet
@@ -210,11 +211,6 @@ export default class MapScreen extends React.Component {
       }
     }
     this.setState({markers: m})
-  }
-  
-  //Keeping track of where we are
-  onRegionChange(region) {
-    this.setState({region})
   }
 
   render() {
@@ -301,14 +297,20 @@ export default class MapScreen extends React.Component {
           </ScrollView>
         </Overlay>
         <MapView style={styles.mapContainer}
-          region = {this.state.region}
-          onRegionChange = {() => this.onRegionChange}
+          mapType= "mutedStandard"
+          followsUserLocation = {true}
+          zoomControlEnabled = {false}
+          pitchEnabled = {false}
+          moveOnMarkerPress = {false}
+          toolbarEnabled = {false}
           onPress = {this.onClick.bind(this)}
           showsUserLocation = {true}>
           {this.state.events.map((marker) => (
             <MapView.Marker
               key = {marker.id}
-              coordinate = {marker.coordinate}/>
+              coordinate = {marker.coordinate}
+              onPress = {(e) => {e.stopPropagation(); this.onMarkerClick(marker.id);}}
+              title={marker.title}/>
           ))}
         </MapView>
       </View>
@@ -374,11 +376,11 @@ const styles = StyleSheet.create({
 
 /*
 Things to do:
--Time select
--invite-only and list of invitees
--Save info in events
-
--Save events
--Delete/edit events
+-Viewing events
+  -Click event to see title
+  -click title to see larger box
+  -basic info
+  -can star event
+-Delete/edit own events
 -Style
 */
