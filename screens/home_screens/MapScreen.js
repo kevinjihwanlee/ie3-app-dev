@@ -13,15 +13,16 @@ export default class MapScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.getInitialState()
-    this.onDateChange = this.onDateChange.bind(this)
   }
 
   //Sets state upon screen rendering
   getInitialState() {
     return {
+      region: null,
       events: this.setInitialEvents(),
       modalVisible: false,
       recentLocation: null,
+      userLocation: null,
       eventNameText: 'Event Name',
       eventNameTextColor: '#D3D3D3',
       eventDescriptionText: 'Description',
@@ -39,6 +40,29 @@ export default class MapScreen extends React.Component {
   //Sets the list of initial markers to appear on the map
   setInitialEvents() { //should get list of current events and set here
     return []
+  }
+
+  getRegion() {
+    if (this.state.region === null) {
+      console.log("new")
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            region: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              latitudeDelta: 0.004,
+              longitudeDelta:  0.006,
+            }
+          })
+        }
+      )
+    }
+    return this.state.region
+  }
+
+  onRegionChange(region) {
+    this.setState({region})
   }
 
   //Fires on clicking the map
@@ -91,9 +115,11 @@ export default class MapScreen extends React.Component {
 
   //Fires on pressing the calendar button
   onCalendar() {
-    let todayDate = this.getTodayDate()
     let selected = this.state.calendarSelected
-    selected[todayDate] = {selected: true}
+    let todayDate = this.getTodayDate()
+    if (Object.keys(selected).length === 0) {
+      selected[todayDate] = {selected: true}
+    }
     this.setState({
       calendarVisible: true,
       calendarSelected: selected,
@@ -297,8 +323,9 @@ export default class MapScreen extends React.Component {
           </ScrollView>
         </Overlay>
         <MapView style={styles.mapContainer}
-          mapType= "mutedStandard"
-          followsUserLocation = {true}
+          mapType= "standard"
+          region = {this.getRegion()}
+          onRegionChange = {() => this.onRegionChange()}
           zoomControlEnabled = {false}
           pitchEnabled = {false}
           moveOnMarkerPress = {false}
