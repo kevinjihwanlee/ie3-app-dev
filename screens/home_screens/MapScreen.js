@@ -36,7 +36,7 @@ export default class MapScreen extends React.Component {
       startTimePickerVisible: false,
       endTimePickerVisible: false,
       startDatetimeSelected: new Date(),
-      endDatetimeSelected: new Date(),
+      endDatetimeSelected: this.addMinutes(60, Date()),
       viewModalVisible: false,
     }
   }
@@ -181,6 +181,11 @@ export default class MapScreen extends React.Component {
     this.setState({
       calendarVisible: false,
     })
+  }
+
+  addMinutes(num, d) {
+    const dateD = new Date(d)
+    return new Date(dateD.getTime() + num*60000)
   }
 
   //Fires on pressing the time picker button
@@ -328,7 +333,8 @@ export default class MapScreen extends React.Component {
 
         <Overlay visible={this.state.createModalVisible}
           onClose={this.onCreateClose}
-          childrenWrapperStyle={styles.modalContainer}>
+          childrenWrapperStyle={styles.modalContainer}
+          >
           <ScrollView style={styles.modalViewContainer}>
             <View style={styles.titleContainer}>
               <TextInput style = {{width: 245,
@@ -358,7 +364,7 @@ export default class MapScreen extends React.Component {
 
             <TouchableOpacity style={styles.modalSubmit}
               onPress= {() => this.onCalendar()}>
-                  <Text>Show Calendar</Text>
+                  <Text>Select Date</Text>
             </TouchableOpacity>
             <Overlay visible = {this.state.calendarVisible}
               onClose={() => this.onCloseCalendar()} closeOnTouchOutside>
@@ -392,6 +398,7 @@ export default class MapScreen extends React.Component {
               titleIOS="End Time"
               is24Hour={false}
               isVisible={this.state.endTimePickerVisible}
+              minimumDate={this.state.startDatetimeSelected}
               onConfirm={(date) => this.onConfirmEndTimePicker(date)}
               onCancel={() => this.onCloseEndTimePicker()}
               date={new Date(this.state.endDatetimeSelected)}
@@ -427,6 +434,9 @@ export default class MapScreen extends React.Component {
         <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
           onClose={this.onViewClose}>
           <Text>{this.getRecentMarker().name}</Text>
+          <Text>{this.getRecentMarker().description}</Text>
+          <Text>{this.getRecentMarker().location}</Text>
+          <Text>{this.getRecentMarker().start_time + " - " + this.getRecentMarker().end_time}</Text>
         </Overlay>
 
 
@@ -507,15 +517,3 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
     },
   });
-
-
-/*
-Things to do:
--Viewing events
-  -Click event to see title
-  -click title to see larger box
-  -basic info
-  -can star event
--Delete/edit own events
--Style
-*/
