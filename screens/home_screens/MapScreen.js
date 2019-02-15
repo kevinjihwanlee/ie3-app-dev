@@ -20,9 +20,10 @@ export default class MapScreen extends React.Component {
     return {
       region: null,
       events: this.setInitialEvents(),
-      modalVisible: false,
+      createModalVisible: false,
       recentLocation: null,
       userLocation: null,
+      recentMarker: null,
       eventNameText: 'Event Name',
       eventNameTextColor: '#D3D3D3',
       eventDescriptionText: 'Description',
@@ -34,6 +35,7 @@ export default class MapScreen extends React.Component {
       calendarSelected: {},
       timePickerVisible: false,
       datetimeSelected: new Date(),
+      viewModalVisible: false,
     }
   }
 
@@ -42,9 +44,13 @@ export default class MapScreen extends React.Component {
     return []
   }
 
+
+
+
+
+  //MAP FUNCTIONS
   getRegion() {
     if (this.state.region === null) {
-      console.log("new")
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.setState({
@@ -68,14 +74,35 @@ export default class MapScreen extends React.Component {
   //Fires on clicking the map
   onClick(e) {
     this.setState({
-      modalVisible: true,
+      createModalVisible: true,
       recentLocation: e.nativeEvent.coordinate
     })
   }
 
   onMarkerClick(i) {
-    console.log(i)
+    this.setState({
+      viewModalVisible: true,
+      recentMarker: i,
+    })
   }
+
+  //Method for removing markers; not used yet
+  removeMarker(id) {
+    let m = this.state.markers
+    for (index in m) {
+      if (m[index].id === id) {
+        m.splice(index, 1)
+        break
+      }
+    }
+    this.setState({markers: m})
+  }
+
+
+
+
+
+  //CREATE EVENT OVERLAY FUNCTIONS
 
   //Fires on clicking the Title TextInput
   onTitleFocus() {
@@ -134,7 +161,6 @@ export default class MapScreen extends React.Component {
     this.setState({
       calendarSelected: selected
     })
-    console.log(selected)
   }
 
   //Returns today's date in string format
@@ -210,12 +236,12 @@ export default class MapScreen extends React.Component {
       time: this.state.datetimeSelected,
     })
     this.setState({markers: m})
-    this.onClose()
+    this.onCreateClose()
   }
 
   //Fires on closing of the Modal
-  onClose = () => this.setState({calendarVisible: false,
-                                modalVisible: false,
+  onCreateClose = () => this.setState({calendarVisible: false,
+                                createModalVisible: false,
                                 eventNameText: 'Event Name',
                                 eventNameTextColor: '#D3D3D3',
                                 eventDescriptionText: 'Description',
@@ -227,23 +253,34 @@ export default class MapScreen extends React.Component {
                                 datetimeSelected: new Date(),
                               })
 
-  //Method for removing markers; not used yet
-  removeMarker(id) {
-    let m = this.state.markers
-    for (index in m) {
-      if (m[index].id === id) {
-        m.splice(index, 1)
-        break
-      }
+  
+
+
+
+
+  //VIEW EVENT OVERLAY FUNCTIONS
+  getRecentMarker() {
+    const rm = this.state.recentMarker
+    if (rm === null) {
+      return ''
+    } else {
+      return rm.title
     }
-    this.setState({markers: m})
   }
 
+  onViewClose = () => this.setState({viewModalVisible: false})
+
+  
+
+
+
+  //RENDERING
   render() {
     return (
       <View style={styles.container}>
-        <Overlay visible={this.state.modalVisible}
-          onClose={this.onClose}
+
+        <Overlay visible={this.state.createModalVisible}
+          onClose={this.onCreateClose}
           childrenWrapperStyle={styles.modalContainer}>
           <ScrollView style={styles.modalViewContainer}>
             <View style={styles.titleContainer}>
@@ -317,11 +354,21 @@ export default class MapScreen extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.modalCancel}
-              onPress = {() => this.onClose()}>
+              onPress = {() => this.onCreateClose()}>
               <Text>Cancel</Text>
             </TouchableOpacity>
           </ScrollView>
         </Overlay>
+
+
+
+        <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
+          onClose={this.onViewClose}>
+          <Text>{this.getRecentMarker()}</Text>
+        </Overlay>
+
+
+
         <MapView style={styles.mapContainer}
           mapType= "standard"
           region = {this.getRegion()}
@@ -336,8 +383,7 @@ export default class MapScreen extends React.Component {
             <MapView.Marker
               key = {marker.id}
               coordinate = {marker.coordinate}
-              onPress = {(e) => {e.stopPropagation(); this.onMarkerClick(marker.id);}}
-              title={marker.title}/>
+              onPress = {(e) => {e.stopPropagation(); this.onMarkerClick(marker);}}/>
           ))}
         </MapView>
       </View>
