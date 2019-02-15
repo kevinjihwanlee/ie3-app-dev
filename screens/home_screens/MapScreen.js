@@ -33,8 +33,10 @@ export default class MapScreen extends React.Component {
       calendarVisible: false,
       currDate: this.getTodayDate(),
       calendarSelected: {},
-      timePickerVisible: false,
-      datetimeSelected: new Date(),
+      startTimePickerVisible: false,
+      endTimePickerVisible: false,
+      startDatetimeSelected: new Date(),
+      endDatetimeSelected: new Date(),
       viewModalVisible: false,
     }
   }
@@ -182,24 +184,46 @@ export default class MapScreen extends React.Component {
   }
 
   //Fires on pressing the time picker button
-  onTimePicker() {
+  onStartTimePicker() {
     this.setState({
-      timePickerVisible: true,
+      startTimePickerVisible: true,
     })
   }
 
   //Fires on confirming in the time picker
-  onConfirmTimePicker(datetime) {
+  onConfirmStartTimePicker(datetime) {
     this.setState({
-      datetimeSelected: datetime,
-      timePickerVisible: false,
+      startDatetimeSelected: datetime,
+      startTimePickerVisible: false,
     })
   }
 
   //fires on closing of time picker
-  onCloseTimePicker() {
+  onCloseStartTimePicker() {
     this.setState({
-      timePickerVisible: false,
+      startTimePickerVisible: false,
+    })
+  }
+
+  //Fires on pressing the time picker button
+  onEndTimePicker() {
+    this.setState({
+      endTimePickerVisible: true,
+    })
+  }
+
+  //Fires on confirming in the time picker
+  onConfirmEndTimePicker(datetime) {
+    this.setState({
+      endDatetimeSelected: datetime,
+      endTimePickerVisible: false,
+    })
+  }
+
+  //fires on closing of time picker
+  onCloseEndTimePicker() {
+    this.setState({
+      endTimePickerVisible: false,
     })
   }
 
@@ -227,13 +251,19 @@ export default class MapScreen extends React.Component {
     let m = this.state.events
     let newID = (m.length === 0 ? 1 : m[m.length - 1].id + 1)
     m.push({
-      title: this.state.eventNameText,
-      description: this.state.eventDescriptionText,
-      location: this.state.customLocationText,
       id: newID,
+      name: this.state.eventNameText,
+      author: "User1",
+      description: this.state.eventDescriptionText,
+      date_created: Date().now,
+      date_event: this.state.calendarSelected,
+      start_time: this.state.startDatetimeSelected,
+      end_time: this.state.endDatetimeSelected,
+      location: this.state.customLocationText,
+      saved: 0,
       coordinate: this.state.recentLocation,
-      day: this.state.calendarSelected,
-      time: this.state.datetimeSelected,
+      is_saved: false,
+      uri: '',
     })
     this.setState({markers: m})
     this.onCreateClose()
@@ -249,8 +279,10 @@ export default class MapScreen extends React.Component {
                                 calendarSelected: {},
                                 customLocationText: 'Location',
                                 customLocationTextColor: '#D3D3D3',
-                                timePickerVisible: false,
-                                datetimeSelected: new Date(),
+                                startTimePickerVisible: false,
+                                endTimePickerVisible: false,
+                                startDatetimeSelected: new Date(),
+                                endDatetimeSelected: new Date(),
                               })
 
   
@@ -262,9 +294,24 @@ export default class MapScreen extends React.Component {
   getRecentMarker() {
     const rm = this.state.recentMarker
     if (rm === null) {
-      return ''
+      return {
+        id: '0',
+        name: 'Sample Event',
+        author: 'User_1',
+        description: 'Sample Description',
+        date_created: Date.now(),
+        date_event: 'Jan 31',
+        start_time: '12:00pm',
+        end_time: '1:00pm',
+        location: 'Tech Auditorium',
+        saved: 0,
+        latitude: 42.05336,
+        longitude: -87.672662,
+        is_saved: false,
+        uri: ''
+      }
     } else {
-      return rm.title
+      return rm
     }
   }
 
@@ -317,22 +364,37 @@ export default class MapScreen extends React.Component {
               onClose={() => this.onCloseCalendar()} closeOnTouchOutside>
               <Calendar
                 date = {this.state.currDate}
+                minDate = {this.state.currDate}
                 markedDates = {this.state.calendarSelected}
                 onDayPress={(date) => this.onDateChange(date)}/>
             </Overlay>
 
             <TouchableOpacity style={styles.modalSubmit}
-              onPress= {() => this.onTimePicker()}>
-                  <Text>Show Time Picker</Text>
+              onPress= {() => this.onStartTimePicker()}>
+                  <Text>Select Start Time</Text>
             </TouchableOpacity>
             <DateTimePicker
               mode="time"
               titleIOS="Start Time"
               is24Hour={false}
-              isVisible={this.state.timePickerVisible}
-              onConfirm={(date) => this.onConfirmTimePicker(date)}
-              onCancel={() => this.onCloseTimePicker()}
-              date={new Date(this.state.datetimeSelected)}
+              isVisible={this.state.startTimePickerVisible}
+              onConfirm={(date) => this.onConfirmStartTimePicker(date)}
+              onCancel={() => this.onCloseStartTimePicker()}
+              date={new Date(this.state.startDatetimeSelected)}
+            />
+
+            <TouchableOpacity style={styles.modalSubmit}
+              onPress= {() => this.onEndTimePicker()}>
+                  <Text>Select End Time</Text>
+            </TouchableOpacity>
+            <DateTimePicker
+              mode="time"
+              titleIOS="End Time"
+              is24Hour={false}
+              isVisible={this.state.endTimePickerVisible}
+              onConfirm={(date) => this.onConfirmEndTimePicker(date)}
+              onCancel={() => this.onCloseEndTimePicker()}
+              date={new Date(this.state.endDatetimeSelected)}
             />
 
             <View style={styles.locationContainer}>
@@ -364,7 +426,7 @@ export default class MapScreen extends React.Component {
 
         <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
           onClose={this.onViewClose}>
-          <Text>{this.getRecentMarker()}</Text>
+          <Text>{this.getRecentMarker().name}</Text>
         </Overlay>
 
 

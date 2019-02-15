@@ -13,8 +13,10 @@ let events = [
     end_time: '1:00am',
     location: '1024 Noyes Avenue, Evanston, IL 60201',
     saved: 32,
-    latitude: 42.05336,
-    longitude: -87.672662,
+    coordinate: {
+      latitude: 42.05336,
+      longitude: -87.672662,
+    },
     is_saved: true, // for if a user has saved that event
     uri: '' // we should pass in a unique image url here for each image to display
   },
