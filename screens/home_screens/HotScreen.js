@@ -2,8 +2,9 @@ import React from 'react';
 import { Platform, Text, View, ScrollView, StyleSheet } from 'react-native';
 import { Icon } from 'expo';
 import { EventItem } from '../../components/EventItem';
+import axios from 'axios';
 
-const hot_events = [
+const hot_events1 = [
     {
         id: '6',
         name: 'Shrek the Musical',
@@ -81,17 +82,67 @@ const hot_events = [
   
 
 export default class HotScreen extends React.Component {
+  state = {
+    posts:[ ]
+  }
+  componentDidMount(){
+      axios.get('https://quiet-spire-38612.herokuapp.com/api/events/5c607e3c8149f900160c89f6')
+        .then(res => {
+          this.setState({
+            posts: res.data.slice(1,10)
+          })
+        })
+    }
     render() {
-        return (
-            <ScrollView style={styles.container}>
-                <Text style={styles.headings}>hot events</Text>
-                <View style={styles.divider}/>
-                <EventItem events={hot_events}></EventItem>
-                <View style={{height: 50}}/>
-            </ScrollView>
+      const { posts } = this.state;
+      const hot_events = posts.length ?  (
+        posts.map(post => {
+          return(
+            { 
+            id: post.id,
+            name: post.name,
+            author: post.author,
+            description: '',
+            date_created: post.date_created,
+            date_event: '',
+            start_time: '',
+            end_time: '',
+            location: '',
+            saved: 2,
+            latitude: post.latitude,
+            longitude: post.longitude,
+            is_saved: post.saved,
+          }
+          )})) : (
+          [{
+          id: '2',
+          name: 'No Post Yet',
+          author: 'David',
+          description: 'No post yet',
+          date_created: Date.now(),
+          date_event: '',
+          start_time: '0:00pm',
+          end_time: '0:00pm',
+          location: "",
+          saved: 2,
+          latitude: 0,
+          longitude: 0,
+          is_saved: true}]
+          );
+            
+          
+      
+      return (
+          <ScrollView style={styles.container}>
+              <Text style={styles.headings}>hot events</Text>
+              <View style={styles.divider}/>
+              <EventItem events={hot_events}></EventItem>
+              <View style={{height: 50}}/>
+          </ScrollView>
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {
