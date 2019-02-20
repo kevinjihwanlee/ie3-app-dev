@@ -4,6 +4,7 @@ import MapView from 'react-native-maps';
 import Overlay from 'react-native-modal-overlay';
 import {Calendar} from 'react-native-calendars';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import axios from 'axios'
 
 export default class MapScreen extends React.Component {
   static navigationOptions = {
@@ -19,7 +20,7 @@ export default class MapScreen extends React.Component {
   getInitialState() {
     return {
       region: null,
-      events: this.setInitialEvents(),
+      events: [],
       createModalVisible: false,
       recentLocation: null,
       userLocation: null,
@@ -41,9 +42,11 @@ export default class MapScreen extends React.Component {
     }
   }
 
-  //Sets the list of initial markers to appear on the map
-  setInitialEvents() { //should get list of current events and set here
-    return []
+  componentDidMount() {
+    axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
+      .then(res => {
+        this.setState({events: res.data.data})
+      })
   }
 
 
