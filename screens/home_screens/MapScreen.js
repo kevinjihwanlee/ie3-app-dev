@@ -47,6 +47,9 @@ export default class MapScreen extends React.Component {
       .then(res => {
         this.setState({events: res.data.data})
       })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
 
@@ -89,18 +92,6 @@ export default class MapScreen extends React.Component {
       viewModalVisible: true,
       recentMarker: i,
     })
-  }
-
-  //Method for removing markers; not used yet
-  removeMarker(id) {
-    let m = this.state.markers
-    for (index in m) {
-      if (m[index].id === id) {
-        m.splice(index, 1)
-        break
-      }
-    }
-    this.setState({markers: m})
   }
 
 
@@ -256,24 +247,30 @@ export default class MapScreen extends React.Component {
   //Fires on pressing the submit button
   onSubmit() {
     //save everything
-    let m = this.state.events
-    let newID = (m.length === 0 ? 1 : m[m.length - 1].id + 1)
-    m.push({
-      id: newID,
+    let e = this.state.events
+
+    const newEvent = {
       name: this.state.eventNameText,
       author: "User1",
       description: this.state.eventDescriptionText,
-      date_created: Date().now,
       date_event: this.state.calendarSelected,
       start_time: this.state.startDatetimeSelected,
       end_time: this.state.endDatetimeSelected,
       location: this.state.customLocationText,
-      saved: 0,
-      coordinate: this.state.recentLocation,
-      is_saved: false,
-      uri: '',
-    })
-    this.setState({markers: m})
+      coordinate: this.state.recentLocation
+    }
+
+    e.push(newEvent)
+    this.setState({events: e})
+
+    axios.post('https://quiet-spire-38612.herokuapp.com/api/events/', newEvent)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
     this.onCreateClose()
   }
 
@@ -303,20 +300,11 @@ export default class MapScreen extends React.Component {
     const rm = this.state.recentMarker
     if (rm === null) {
       return {
-        id: '0',
-        name: 'Sample Event',
-        author: 'User_1',
-        description: 'Sample Description',
-        date_created: Date.now(),
-        date_event: 'Jan 31',
-        start_time: '12:00pm',
-        end_time: '1:00pm',
-        location: 'Tech Auditorium',
-        saved: 0,
-        latitude: 42.05336,
-        longitude: -87.672662,
-        is_saved: false,
-        uri: ''
+        name: 'Error',
+        description: 'Event Not Found',
+        start_time: '',
+        end_time: '',
+        location: '',
       }
     } else {
       return rm
@@ -456,7 +444,7 @@ export default class MapScreen extends React.Component {
           showsUserLocation = {true}>
           {this.state.events.map((marker) => (
             <MapView.Marker
-              key = {marker.id}
+              key = {marker.name}
               coordinate = {marker.coordinate}
               onPress = {(e) => {e.stopPropagation(); this.onMarkerClick(marker);}}/>
           ))}
