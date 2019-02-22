@@ -249,11 +249,17 @@ export default class MapScreen extends React.Component {
     //save everything
     let e = this.state.events
 
+    for (savedEvent of e) {
+      if (this.state.eventNameText === savedEvent.name) {
+        return
+      }
+    }
+
     const newEvent = {
       name: this.state.eventNameText,
       author: "User1",
       description: this.state.eventDescriptionText,
-      date_event: this.state.calendarSelected,
+      date_event: Object.keys(this.state.calendarSelected)[0],
       start_time: this.state.startDatetimeSelected,
       end_time: this.state.endDatetimeSelected,
       location: this.state.customLocationText,
@@ -265,10 +271,10 @@ export default class MapScreen extends React.Component {
 
     axios.post('https://quiet-spire-38612.herokuapp.com/api/events/', newEvent)
       .then(res => {
-        console.log(res)
+        console.log("Responded")
       })
       .catch(err => {
-        console.log(err)
+        console.log("Errored")
       })
 
     this.onCreateClose()
@@ -313,6 +319,26 @@ export default class MapScreen extends React.Component {
 
   onViewClose = () => this.setState({viewModalVisible: false})
 
+  deleteEvent() {
+    const rm = this.state.recentMarker
+    let events = this.state.events
+    for (i in events) {
+      if (events[i].name === rm.name) {
+        events.splice(i, 1)
+      }
+    }
+    this.setState({events})
+
+    axios.delete('https://quiet-spire-38612.herokuapp.com/api/events/${this.state.recentMarker.id}')
+      .then(res => {
+        console.log("Deleted")
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.log("Errored")
+      })
+    this.onViewClose()
+  }
   
 
 
@@ -428,6 +454,11 @@ export default class MapScreen extends React.Component {
           <Text>{this.getRecentMarker().description}</Text>
           <Text>{this.getRecentMarker().location}</Text>
           <Text>{this.getRecentMarker().start_time + " - " + this.getRecentMarker().end_time}</Text>
+          <TouchableOpacity style={styles.modalCancel}
+            onPress = {() => this.deleteEvent()}
+          >
+            <Text>Delete Event</Text>
+          </TouchableOpacity>
         </Overlay>
 
 
