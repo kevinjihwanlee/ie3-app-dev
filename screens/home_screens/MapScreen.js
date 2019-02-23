@@ -246,7 +246,6 @@ export default class MapScreen extends React.Component {
 
   //Fires on pressing the submit button
   onSubmit() {
-    //save everything
     let e = this.state.events
 
     for (savedEvent of e) {
@@ -256,6 +255,7 @@ export default class MapScreen extends React.Component {
     }
 
     const newEvent = {
+      _id: null,
       name: this.state.eventNameText,
       author: "User1",
       description: this.state.eventDescriptionText,
@@ -266,16 +266,17 @@ export default class MapScreen extends React.Component {
       coordinate: this.state.recentLocation
     }
 
-    e.push(newEvent)
-    this.setState({events: e})
-
     axios.post('https://quiet-spire-38612.herokuapp.com/api/events/', newEvent)
       .then(res => {
-        console.log("Responded")
+        console.log(res.data)
+        newEvent._id = res.data.data._id
       })
       .catch(err => {
-        console.log("Errored")
+        console.log(err)
       })
+
+    e.push(newEvent)
+    this.setState({events: e})
 
     this.onCreateClose()
   }
@@ -325,17 +326,17 @@ export default class MapScreen extends React.Component {
     for (i in events) {
       if (events[i].name === rm.name) {
         events.splice(i, 1)
+        break
       }
     }
     this.setState({events})
 
-    axios.delete('https://quiet-spire-38612.herokuapp.com/api/events/${this.state.recentMarker.id}')
+    axios.delete(`https://quiet-spire-38612.herokuapp.com/api/events/` + this.state.recentMarker._id)
       .then(res => {
-        console.log("Deleted")
         console.log(res.data)
       })
       .catch(err => {
-        console.log("Errored")
+        console.log(err)
       })
     this.onViewClose()
   }
