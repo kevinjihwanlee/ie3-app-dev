@@ -4,6 +4,7 @@ import MapView from 'react-native-maps';
 import Overlay from 'react-native-modal-overlay';
 import {Calendar} from 'react-native-calendars';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import axios from 'axios'
 
 export default class MapScreen extends React.Component {
   static navigationOptions = {
@@ -19,7 +20,7 @@ export default class MapScreen extends React.Component {
   getInitialState() {
     return {
       region: null,
-      events: this.setInitialEvents(),
+      events: [],
       createModalVisible: false,
       recentLocation: null,
       userLocation: null,
@@ -41,9 +42,14 @@ export default class MapScreen extends React.Component {
     }
   }
 
-  //Sets the list of initial markers to appear on the map
-  setInitialEvents() { //should get list of current events and set here
-    return []
+  componentDidMount() {
+    axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
+      .then(res => {
+        this.setState({events: res.data.data})
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
 
@@ -86,18 +92,6 @@ export default class MapScreen extends React.Component {
       viewModalVisible: true,
       recentMarker: i,
     })
-  }
-
-  //Method for removing markers; not used yet
-  removeMarker(id) {
-    let m = this.state.markers
-    for (index in m) {
-      if (m[index].id === id) {
-        m.splice(index, 1)
-        break
-      }
-    }
-    this.setState({markers: m})
   }
 
 
@@ -252,25 +246,38 @@ export default class MapScreen extends React.Component {
 
   //Fires on pressing the submit button
   onSubmit() {
-    //save everything
-    let m = this.state.events
-    let newID = (m.length === 0 ? 1 : m[m.length - 1].id + 1)
-    m.push({
-      id: newID,
+    let e = this.state.events
+
+    for (savedEvent of e) {
+      if (this.state.eventNameText === savedEvent.name) {
+        return
+      }
+    }
+
+    const newEvent = {
+      _id: null,
       name: this.state.eventNameText,
       author: "User1",
       description: this.state.eventDescriptionText,
-      date_created: Date().now,
-      date_event: this.state.calendarSelected,
+      date_event: Object.keys(this.state.calendarSelected)[0],
       start_time: this.state.startDatetimeSelected,
       end_time: this.state.endDatetimeSelected,
       location: this.state.customLocationText,
-      saved: 0,
-      coordinate: this.state.recentLocation,
-      is_saved: false,
-      uri: '',
-    })
-    this.setState({markers: m})
+      coordinate: this.state.recentLocation
+    }
+
+    axios.post('https://quiet-spire-38612.herokuapp.com/api/events/', newEvent)
+      .then(res => {
+        console.log(res.data)
+        newEvent._id = res.data.data._id
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+    e.push(newEvent)
+    this.setState({events: e})
+
     this.onCreateClose()
   }
 
@@ -300,20 +307,11 @@ export default class MapScreen extends React.Component {
     const rm = this.state.recentMarker
     if (rm === null) {
       return {
-        id: '0',
-        name: 'Sample Event',
-        author: 'User_1',
-        description: 'Sample Description',
-        date_created: Date.now(),
-        date_event: 'Jan 31',
-        start_time: '12:00pm',
-        end_time: '1:00pm',
-        location: 'Tech Auditorium',
-        saved: 0,
-        latitude: 42.05336,
-        longitude: -87.672662,
-        is_saved: false,
-        uri: ''
+        name: 'Error',
+        description: 'Event Not Found',
+        start_time: '',
+        end_time: '',
+        location: '',
       }
     } else {
       return rm
@@ -322,6 +320,26 @@ export default class MapScreen extends React.Component {
 
   onViewClose = () => this.setState({viewModalVisible: false})
 
+  deleteEvent() {
+    const rm = this.state.recentMarker
+    let events = this.state.events
+    for (i in events) {
+      if (events[i].name === rm.name) {
+        events.splice(i, 1)
+        break
+      }
+    }
+    this.setState({events})
+
+    axios.delete(`https://quiet-spire-38612.herokuapp.com/api/events/` + this.state.recentMarker._id)
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    this.onViewClose()
+  }
   
 
 
@@ -437,6 +455,11 @@ export default class MapScreen extends React.Component {
           <Text>{this.getRecentMarker().description}</Text>
           <Text>{this.getRecentMarker().location}</Text>
           <Text>{this.getRecentMarker().start_time + " - " + this.getRecentMarker().end_time}</Text>
+          <TouchableOpacity style={styles.modalCancel}
+            onPress = {() => this.deleteEvent()}
+          >
+            <Text>Delete Event</Text>
+          </TouchableOpacity>
         </Overlay>
 
 
@@ -453,7 +476,7 @@ export default class MapScreen extends React.Component {
           showsUserLocation = {true}>
           {this.state.events.map((marker) => (
             <MapView.Marker
-              key = {marker.id}
+              key = {marker.name}
               coordinate = {marker.coordinate}
               onPress = {(e) => {e.stopPropagation(); this.onMarkerClick(marker);}}/>
           ))}
