@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, TextInput, ScrollView, Image} from 'react-native';
 import MapView from 'react-native-maps';
-import OverlayComponent from 'react-native-maps'
 import Overlay from 'react-native-modal-overlay';
 import {Calendar} from 'react-native-calendars';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import axios from 'axios'
+import HideView from '../../components/HideView.js'
 
 export default class MapScreen extends React.Component {
   static navigationOptions = {
@@ -42,6 +42,7 @@ export default class MapScreen extends React.Component {
       viewModalVisible: false,
       errVisible: false,
       errText: false,
+      addingEvent: false,
     }
   }
 
@@ -55,6 +56,14 @@ export default class MapScreen extends React.Component {
       })
   }
 
+
+
+  //ADD EVENT FUNCTIONS
+  onAddEventPress() {
+    this.setState({
+      addingEvent: true,
+    })
+  }
 
 
 
@@ -83,11 +92,13 @@ export default class MapScreen extends React.Component {
   }
 
   //Fires on clicking the map
-  onClick(e) {
-    this.setState({
-      createModalVisible: true,
-      recentLocation: e.nativeEvent.coordinate
-    })
+  onMapClick(e) {
+    if (this.state.addingEvent) {
+      this.setState({
+        createModalVisible: true,
+        recentLocation: e.nativeEvent.coordinate
+      })
+    }
   }
 
   onMarkerClick(i) {
@@ -295,6 +306,7 @@ export default class MapScreen extends React.Component {
                                 endTimePickerVisible: false,
                                 startDatetimeSelected: new Date(),
                                 endDatetimeSelected: new Date(),
+                                addingEvent: false,
                               })
 
   submitErrors() {
@@ -495,7 +507,7 @@ export default class MapScreen extends React.Component {
           pitchEnabled = {false}
           moveOnMarkerPress = {false}
           toolbarEnabled = {false}
-          onPress = {this.onClick.bind(this)}
+          onPress = {this.onMapClick.bind(this)}
           showsUserLocation = {true}>
           {this.state.events.map((marker) => (
             <MapView.Marker
@@ -504,11 +516,15 @@ export default class MapScreen extends React.Component {
               onPress = {(e) => {e.stopPropagation(); this.onMarkerClick(marker);}}/>
           ))}
         </MapView>
-        <TouchableOpacity style={styles.addOverlay}>
-          <Image source={require('../../assets/images/AddEvent.png')}
-            style = {{width: 110, height: 110}}
-            resizeMode='contain'/>
-        </TouchableOpacity>
+        
+        <HideView hide={this.state.addingEvent}>
+          <TouchableOpacity style={styles.addOverlay}
+            onPress = {() => this.onAddEventPress()}>
+            <Image source={require('../../assets/images/AddEvent.png')}
+              style = {{width: 100, height: 100}}
+              resizeMode='contain'/>
+          </TouchableOpacity>
+        </HideView>
       </View>
     )
   }
@@ -570,7 +586,7 @@ const styles = StyleSheet.create({
     addOverlay: {
       flex: 1,
       position: 'absolute', 
-      bottom: 15, 
-      right: 15,
+      bottom: 12, 
+      right: 12,
     }
   });
