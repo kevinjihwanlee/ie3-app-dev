@@ -102,10 +102,12 @@ export default class MapScreen extends React.Component {
   }
 
   onMarkerClick(i) {
-    this.setState({
-      viewModalVisible: true,
-      recentMarker: i,
-    })
+    if (this.state.addingEvent === false) {
+      this.setState({
+        viewModalVisible: true,
+        recentMarker: i,
+      })
+    }
   }
 
 
