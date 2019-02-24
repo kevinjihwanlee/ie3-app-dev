@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, TextInput, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, TextInput, ScrollView, Image} from 'react-native';
 import MapView from 'react-native-maps';
+import OverlayComponent from 'react-native-maps'
 import Overlay from 'react-native-modal-overlay';
 import {Calendar} from 'react-native-calendars';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -503,6 +504,11 @@ export default class MapScreen extends React.Component {
               onPress = {(e) => {e.stopPropagation(); this.onMarkerClick(marker);}}/>
           ))}
         </MapView>
+        <TouchableOpacity style={styles.addOverlay}>
+          <Image source={require('../../assets/images/AddEvent.png')}
+            style = {{width: 110, height: 110}}
+            resizeMode='contain'/>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -561,4 +567,10 @@ const styles = StyleSheet.create({
     modalCancel: {
       alignSelf: 'center',
     },
+    addOverlay: {
+      flex: 1,
+      position: 'absolute', 
+      bottom: 15, 
+      right: 15,
+    }
   });
