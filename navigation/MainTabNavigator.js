@@ -46,6 +46,7 @@ HomeStack.navigationOptions = {
   ),
 };
 
+/*
 const LinksStack = createStackNavigator({
   Links: LinksScreen,
 });
@@ -59,6 +60,7 @@ LinksStack.navigationOptions = {
     />
   ),
 };
+*/
 
 const ProfileStack = createStackNavigator({
   Profile: ProfileScreen,
@@ -92,7 +94,7 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator(
   {
     HomeStack,
-    LinksStack,
+    //LinksStack,
     ProfileStack,
     SettingsStack,
   },

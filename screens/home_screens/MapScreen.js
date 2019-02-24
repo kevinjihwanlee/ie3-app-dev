@@ -39,6 +39,8 @@ export default class MapScreen extends React.Component {
       startDatetimeSelected: new Date(),
       endDatetimeSelected: this.addMinutes(60, Date()),
       viewModalVisible: false,
+      errVisible: false,
+      errText: false,
     }
   }
 
@@ -246,12 +248,8 @@ export default class MapScreen extends React.Component {
 
   //Fires on pressing the submit button
   onSubmit() {
-    let e = this.state.events
-
-    for (savedEvent of e) {
-      if (this.state.eventNameText === savedEvent.name) {
-        return
-      }
+    if (this.submitErrors()) {
+      return
     }
 
     const newEvent = {
@@ -275,6 +273,7 @@ export default class MapScreen extends React.Component {
         console.log(err)
       })
 
+    let e = this.state.events
     e.push(newEvent)
     this.setState({events: e})
 
@@ -297,7 +296,23 @@ export default class MapScreen extends React.Component {
                                 endDatetimeSelected: new Date(),
                               })
 
-  
+  submitErrors() {
+    for (savedEvent of this.state.events) {
+      if (this.state.eventNameText === savedEvent.name) {
+        this.setState({errText: "Event name already taken.", errVisible: true})
+        return true
+      }
+    }
+    if (Date.parse(this.state.startDatetimeSelected) > Date.parse(this.state.endDatetimeSelected)) {
+      this.setState({errText: "Start time must be before end time.", errVisible: true})
+      return true
+    }
+    return false
+  }
+
+  hideError() {
+    this.setState({errVisible: false})
+  }
 
 
 
@@ -382,12 +397,13 @@ export default class MapScreen extends React.Component {
 
             <TouchableOpacity style={styles.modalSubmit}
               onPress= {() => this.onCalendar()}>
-                  <Text>Select Date</Text>
+                  <Text>Event Date: {this.state.currDate}</Text>
             </TouchableOpacity>
             <Overlay visible = {this.state.calendarVisible}
               onClose={() => this.onCloseCalendar()} closeOnTouchOutside>
               <Calendar
                 date = {this.state.currDate}
+                hideArrows = {false}
                 minDate = {this.state.currDate}
                 markedDates = {this.state.calendarSelected}
                 onDayPress={(date) => this.onDateChange(date)}/>
@@ -395,7 +411,7 @@ export default class MapScreen extends React.Component {
 
             <TouchableOpacity style={styles.modalSubmit}
               onPress= {() => this.onStartTimePicker()}>
-                  <Text>Select Start Time</Text>
+                  <Text>Start Time: {this.state.startDatetimeSelected.toString()}</Text>
             </TouchableOpacity>
             <DateTimePicker
               mode="time"
@@ -409,7 +425,7 @@ export default class MapScreen extends React.Component {
 
             <TouchableOpacity style={styles.modalSubmit}
               onPress= {() => this.onEndTimePicker()}>
-                  <Text>Select End Time</Text>
+                  <Text>End Time: {this.state.endDatetimeSelected.toString()}</Text>
             </TouchableOpacity>
             <DateTimePicker
               mode="time"
@@ -445,6 +461,11 @@ export default class MapScreen extends React.Component {
               <Text>Cancel</Text>
             </TouchableOpacity>
           </ScrollView>
+
+          <Overlay visible={this.state.errVisible} closeOnTouchOutside
+            onClose={() => this.hideError()}>
+            <Text>{this.state.errText}</Text>
+          </Overlay>
         </Overlay>
 
 
@@ -461,6 +482,7 @@ export default class MapScreen extends React.Component {
             <Text>Delete Event</Text>
           </TouchableOpacity>
         </Overlay>
+
 
 
 
