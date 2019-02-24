@@ -403,6 +403,7 @@ export default class MapScreen extends React.Component {
               onClose={() => this.onCloseCalendar()} closeOnTouchOutside>
               <Calendar
                 date = {this.state.currDate}
+                hideArrows = {false}
                 minDate = {this.state.currDate}
                 markedDates = {this.state.calendarSelected}
                 onDayPress={(date) => this.onDateChange(date)}/>
