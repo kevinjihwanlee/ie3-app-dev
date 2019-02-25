@@ -524,9 +524,10 @@ export default class MapScreen extends React.Component {
           showsUserLocation = {true}>
           {this.state.events.map((marker) => (
             <MapView.Marker
-              key = {marker.name}
+              key = {marker._id}
               coordinate = {marker.coordinate}
-              onPress = {(e) => {e.stopPropagation(); this.onMarkerClick(marker);}}/>
+              onPress = {(e) => {e.stopPropagation(); this.onMarkerClick(marker);}}
+              pinColor = '#4E2A84'/>
           ))}
         </MapView>
         
@@ -625,7 +626,6 @@ const styles = StyleSheet.create({
       opacity: 0.75,
     },
     instructionText: {
-      //fontFamily: 'space-mono',
       fontSize: 20,
       color: '#4E2A84',
       fontWeight: 'bold',
