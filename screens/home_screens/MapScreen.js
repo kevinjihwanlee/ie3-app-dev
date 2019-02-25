@@ -209,6 +209,15 @@ export default class MapScreen extends React.Component {
     return new Date(dateD.getTime() + num*60000)
   }
 
+  parseViewTime(t) {
+    return t.substring(t.indexOf('T') + 1, t.indexOf('.') - 3)
+  }
+
+  parseEditTime(t) {
+    const colonIndex = t.indexOf(':')
+    return t.substring(colonIndex - 2, colonIndex + 3)
+  }
+
   //Fires on pressing the time picker button
   onStartTimePicker() {
     this.setState({
@@ -218,8 +227,10 @@ export default class MapScreen extends React.Component {
 
   //Fires on confirming in the time picker
   onConfirmStartTimePicker(datetime) {
+    const diff = (datetime - Date.parse(this.state.startDatetimeSelected)) / 60000
     this.setState({
       startDatetimeSelected: datetime,
+      endDatetimeSelected: this.addMinutes(diff, this.state.endDatetimeSelected),
       startTimePickerVisible: false,
     })
   }
@@ -438,11 +449,11 @@ export default class MapScreen extends React.Component {
 
             <TouchableOpacity style={styles.modalSubmit}
               onPress= {() => this.onStartTimePicker()}>
-                  <Text>Start Time: {this.state.startDatetimeSelected.toString()}</Text>
+                  <Text>Start Time: {this.parseEditTime(this.state.startDatetimeSelected.toString())}</Text>
             </TouchableOpacity>
             <DateTimePicker
               mode="time"
-              titleIOS="Start Time"
+              titleIOS="Start Time" 
               is24Hour={false}
               isVisible={this.state.startTimePickerVisible}
               onConfirm={(date) => this.onConfirmStartTimePicker(date)}
@@ -452,7 +463,7 @@ export default class MapScreen extends React.Component {
 
             <TouchableOpacity style={styles.modalSubmit}
               onPress= {() => this.onEndTimePicker()}>
-                  <Text>End Time: {this.state.endDatetimeSelected.toString()}</Text>
+                  <Text>End Time: {this.parseEditTime(this.state.endDatetimeSelected.toString())}</Text>
             </TouchableOpacity>
             <DateTimePicker
               mode="time"
@@ -502,10 +513,9 @@ export default class MapScreen extends React.Component {
           <Text>{this.getRecentMarker().name}</Text>
           <Text>{this.getRecentMarker().description}</Text>
           <Text>{this.getRecentMarker().location}</Text>
-          <Text>{this.getRecentMarker().start_time + " - " + this.getRecentMarker().end_time}</Text>
+          <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
           <TouchableOpacity style={styles.modalCancel}
-            onPress = {() => this.deleteEvent()}
-          >
+            onPress = {() => this.deleteEvent()}>
             <Text>Delete Event</Text>
           </TouchableOpacity>
         </Overlay>
