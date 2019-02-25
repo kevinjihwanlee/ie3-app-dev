@@ -14,7 +14,7 @@
     "@expo/samples": "2.1.1",
     "@expo/vector-icons": "^9.0.0",
     "expo": "^32.0.0",
-    "expo-cli": "^2.7.0",
+    "expo-cli": "^2.11.2",
     "node": "^11.6.0",
     "npm": "^6.7.0",
     "react": "^16.5.0",

@@ -1,5 +1,6 @@
 import React from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, Text, Switch, View} from 'react-native';
+import HideView from '../components/HideView.js'
 
 export default class SettingsScreen extends React.Component {
   constructor(props) {
@@ -73,18 +74,6 @@ export default class SettingsScreen extends React.Component {
     );
   }
 }
-
-const HideView = (props) => {
-  const { children, hide, style } = props;
-  if (hide) {
-    return null;
-  }
-  return (
-    <View {...this.props} style={style}>
-      { children }
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   container: {
