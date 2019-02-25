@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
       position: 'absolute',
       bottom: 15,
       alignSelf: 'center',
-      backgroundColor: '#ededed',
+      backgroundColor: '#fff',
       borderRadius: 5,
       opacity: 0.75,
     },
