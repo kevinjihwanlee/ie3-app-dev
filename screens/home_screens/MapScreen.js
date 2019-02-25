@@ -43,6 +43,7 @@ export default class MapScreen extends React.Component {
       errVisible: false,
       errText: false,
       addingEvent: false,
+      instructionVisible: false,
     }
   }
 
@@ -62,6 +63,7 @@ export default class MapScreen extends React.Component {
   onAddEventPress() {
     this.setState({
       addingEvent: true,
+      instructionVisible: true,
     })
   }
 
@@ -96,7 +98,8 @@ export default class MapScreen extends React.Component {
     if (this.state.addingEvent) {
       this.setState({
         createModalVisible: true,
-        recentLocation: e.nativeEvent.coordinate
+        recentLocation: e.nativeEvent.coordinate,
+        instructionVisible: false,
       })
     }
   }
@@ -527,6 +530,12 @@ export default class MapScreen extends React.Component {
               resizeMode='contain'/>
           </TouchableOpacity>
         </HideView>
+
+        <HideView hide={this.state.instructionVisible === false}
+          style={styles.instructionContainer}>
+          <Text style={styles.instructionText}>Choose Marker Location</Text>
+        </HideView>
+        
       </View>
     )
   }
@@ -590,5 +599,18 @@ const styles = StyleSheet.create({
       position: 'absolute', 
       bottom: 12, 
       right: 12,
+    },
+    instructionContainer: {
+      flex: 1,
+      position: 'absolute',
+      bottom: 15,
+      alignSelf: 'center',
+      backgroundColor: '#ededed',
+      borderRadius: 5,
+      opacity: 0.5,
+    },
+    instructionText: {
+      fontFamily: 'space-mono',
+      fontSize: 20,
     }
   });
