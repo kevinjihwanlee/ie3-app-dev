@@ -305,21 +305,24 @@ export default class MapScreen extends React.Component {
   }
 
   //Fires on closing of the Modal
-  onCreateClose = () => this.setState({calendarVisible: false,
-                                createModalVisible: false,
-                                eventNameText: 'Event Name',
-                                eventNameTextColor: '#D3D3D3',
-                                eventDescriptionText: 'Description',
-                                eventDescriptionTextColor: '#D3D3D3',
-                                calendarSelected: {},
-                                customLocationText: 'Location',
-                                customLocationTextColor: '#D3D3D3',
-                                startTimePickerVisible: false,
-                                endTimePickerVisible: false,
-                                startDatetimeSelected: new Date(),
-                                endDatetimeSelected: new Date(),
-                                addingEvent: false,
-                              })
+  onCreateClose() {
+    this.setState({
+      calendarVisible: false,
+      createModalVisible: false,
+      eventNameText: 'Event Name',
+      eventNameTextColor: '#D3D3D3',
+      eventDescriptionText: 'Description',
+      eventDescriptionTextColor: '#D3D3D3',
+      calendarSelected: {},
+      customLocationText: 'Location',
+      customLocationTextColor: '#D3D3D3',
+      startTimePickerVisible: false,
+      endTimePickerVisible: false,
+      startDatetimeSelected: new Date(),
+      endDatetimeSelected: new Date(),
+      addingEvent: false,
+    })
+  }
 
   submitErrors() {
     for (savedEvent of this.state.events) {
@@ -390,7 +393,7 @@ export default class MapScreen extends React.Component {
       <View style={styles.container}>
 
         <Overlay visible={this.state.createModalVisible}
-          onClose={this.onCreateClose}
+          onClose={() => this.onCreateClose()}
           childrenWrapperStyle={styles.modalContainer}
           >
           <ScrollView style={styles.modalViewContainer}>
