@@ -67,6 +67,13 @@ export default class MapScreen extends React.Component {
     })
   }
 
+  closeEventAdd() {
+    this.setState({
+      addingEvent: false,
+      instructionVisible: false,
+    })
+  }
+
 
 
 
@@ -503,7 +510,6 @@ export default class MapScreen extends React.Component {
 
 
 
-
         <MapView style={styles.mapContainer}
           mapType= "standard"
           region = {this.getRegion()}
@@ -534,6 +540,13 @@ export default class MapScreen extends React.Component {
         <HideView hide={this.state.instructionVisible === false}
           style={styles.instructionContainer}>
           <Text style={styles.instructionText}>Choose Marker Location</Text>
+        </HideView>
+
+        <HideView hide={this.state.instructionVisible === false}
+          style={styles.closeCreate}>
+            <TouchableOpacity onPress = {() => this.closeEventAdd()}>
+              <Text style={styles.closeCreateText}>X</Text>
+            </TouchableOpacity>
         </HideView>
         
       </View>
@@ -612,5 +625,14 @@ const styles = StyleSheet.create({
     instructionText: {
       fontFamily: 'space-mono',
       fontSize: 20,
-    }
+    },
+    closeCreate: {
+      flex: 1,
+      position: 'absolute',
+      top: 10,
+      right: 12,
+    },
+    closeCreateText: {
+      fontSize: 30,
+    },
   });
