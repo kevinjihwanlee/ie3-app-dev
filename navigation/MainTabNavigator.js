@@ -24,9 +24,8 @@ const HomeStack = createMaterialTopTabNavigator({
       alignContent: 'center',
     },
     labelStyle: {
-      paddingTop: 17,
-      fontSize: 14,
-      fontFamily: 'space-mono',
+      paddingTop: 16,
+      fontSize: 15,
       fontWeight: 'bold',
     },
   }

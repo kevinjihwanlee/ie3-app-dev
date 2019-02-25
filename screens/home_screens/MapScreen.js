@@ -8,6 +8,7 @@ import axios from 'axios'
 import HideView from '../../components/HideView.js'
 
 export default class MapScreen extends React.Component {
+
   static navigationOptions = {
     title: 'Map',
   };
@@ -391,11 +392,9 @@ export default class MapScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-
         <Overlay visible={this.state.createModalVisible}
           onClose={() => this.onCreateClose()}
-          childrenWrapperStyle={styles.modalContainer}
-          >
+          childrenWrapperStyle={styles.modalContainer}>
           <ScrollView style={styles.modalViewContainer}>
             <View style={styles.titleContainer}>
               <TextInput style = {{width: 245,
@@ -547,9 +546,9 @@ export default class MapScreen extends React.Component {
 
         <HideView hide={this.state.instructionVisible === false}
           style={styles.closeCreate}>
-            <TouchableOpacity onPress = {() => this.closeEventAdd()}>
-              <Text style={styles.closeCreateText}>X</Text>
-            </TouchableOpacity>
+          <TouchableOpacity onPress = {() => this.closeEventAdd()}>
+            <Text style={styles.closeCreateText}>X</Text>
+          </TouchableOpacity>
         </HideView>
         
       </View>
@@ -623,19 +622,23 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
       backgroundColor: '#ededed',
       borderRadius: 5,
-      opacity: 0.5,
+      opacity: 0.75,
     },
     instructionText: {
-      fontFamily: 'space-mono',
+      //fontFamily: 'space-mono',
       fontSize: 20,
+      color: '#4E2A84',
+      fontWeight: 'bold',
+      letterSpacing: 1,
     },
     closeCreate: {
       flex: 1,
       position: 'absolute',
       top: 10,
-      right: 12,
+      right: 15,
     },
     closeCreateText: {
-      fontSize: 30,
+      fontSize: 40,
+      color: '#4E2A84',
     },
   });
