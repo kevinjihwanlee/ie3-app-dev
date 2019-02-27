@@ -12,46 +12,44 @@ export default class HotScreen extends React.Component {
     }
   }
   componentDidMount(){
-      const self = this
+      
       axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
         .then(res => {
-          console.log(res.data)
-        })
-        .then(res => {
-          self.setState({
-            events:res.data
+            this.setState({
+            events: res.data.data,
           })
         })
         .catch(err => {
           console.log(err)
         })
-       console.log(this.state)
     }
-
-  
 
     render() {
       const { events } = this.state;
-      const hot_events = 
-        events.map(post => {
-          return(
-            { 
-            id: post._id,
-            name: post.name,
-            author: post.author,
-            description: '',
-            date_created: post.date_created,
-            date_event: '',
-            start_time: '',
-            end_time: post.end_time,
-            location: post.location,
-            saved: 2,
-            latitude: post.coordinate.latitude,
-            longitude: post.coordinate.longitude,
-            saved: post.saved,
-          }
-          )})
-      
+      //The number of times that the event is saved to count as a hotevent
+      const defineHot = 0
+      console.log(events)
+      var hot_events = []
+      for (var i = 0;i < events.length; i++){
+        a = events[i]
+        if (a.saved >= defineHot){
+          hot_events.push({
+          id: a._id,
+          name: a.name,
+          author: a.author,
+          description: a.description,
+          date_created: a.date_created,
+          date_event: '',
+          start_time: a.start_time,
+          end_time: a.end_time,
+          location: a.location,
+          saved: a.saved,
+          latitude: a.coordinate.latitude,
+          longitude: a.coordinate.longitude,
+        })
+      }
+    
+    }
     
       return (
           <ScrollView style={styles.container}>

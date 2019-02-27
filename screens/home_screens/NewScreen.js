@@ -2,72 +2,68 @@ import React from 'react';
 import { Platform, Text, View, ScrollView, StyleSheet } from 'react-native';
 import { Icon } from 'expo';
 import { EventItem } from '../../components/EventItem';
+import axios from 'axios';
 
-const new_events = [
-  {
-    id: '5',
-    name: 'Lunar New Year Parade',
-    author: 'rach',
-    description: 'Come see the parade in Chicago, it will be soo much fun with everyone there to cheer on our dancers and eat good food. We will provide free lanterns for our lantern lighting festival, we just ask you to bring cash for our food vendors at the event!',
-    date_created: Date.now(),
-    date_event: 'Feb 10',
-    start_time: '1:00am',
-    end_time: '6:00am',
-    location: 'Chinatown, by Jill\'s Bakery',
-    saved: 32,
-    latitude: 42.05336,
-    longitude: -87.672662,
-  },
-    {
-      id: '2',
-      name: 'Norris Grand Opening',
-      author: 'id123',
-      description: 'Come celebrate the grand opening of Norris with free food!',
-      date_created: Date.now(),
-      date_event: 'Oct 8',
-      start_time: '1:00pm',
-      end_time: '4:00pm',
-      location: "Norris Student Center at Northwestern University",
-      saved: 2,
-      latitude: 42.05336,
-      longitude: -87.672662,
-      is_saved: true
-    },
-    {
-      id: '3',
-      name: 'a party',
-      author: 'id321',
-      description: 'party to end all parties at ridge and noyes, you cannot miss this spectacle. lots of good times and chips and dip. welcome to all! :)',
-      date_created: Date.now(),
-      date_event: 'Feb 8',
-      start_time: '10:00pm',
-      end_time: '3:00am',
-      location: 'mikalya\'s place, 1514 Ridge Place',
-      saved: 45,
-      latitude: 42.05336,
-      longitude: -87.672662,
-      is_saved: true
-    },
-    {
-      id: '1',
-      name: 'Rachael\'s 21st Birthday!',
-      author: 'rach',
-      description: 'better than the party below because it has a really long description, so you can test what long descriptions do, in case that is interesting content to know about. We can make this section as long as we want with as much text as we want.',
-      date_created: Date.now(),
-      date_event: 'Feb 8',
-      start_time: '10:00pm',
-      end_time: '1:00am',
-      location: '1024 Noyes Avenue, Evanston, IL 60201',
-      saved: 32,
-      latitude: 42.05336,
-      longitude: -87.672662,
-      is_saved: true
-    }
-  ];
-  
 
 export default class NewScreen extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      events:[ ]
+    }
+  }
+
+  newDatelimit(self){
+    var date1 = new Date('December 1, 2019 00:00:00')
+    var date2 = new Date('December 1, 2019 12:00:00')
+    numericValueOfDateDifference = date2.getTime() - date1.getTime()
+    return numericValueOfDateDifference
+  }
+
+
+
+
+  
+  componentDidMount(){
+      
+      axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
+        .then(res => {
+            this.setState({
+            events: res.data.data,
+          })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+
     render() {
+      const { events } = this.state;
+      var new_events = []
+      const currentTime = new Date()
+      
+      for (var i = 0;i < events.length; i++){
+        a = events[i]
+        eventTime = new Date(a.date_created)
+        if (-eventTime.getTime()+currentTime.getTime()<=this.newDatelimit()){
+          new_events.push({
+          id: a._id,
+          name: a.name,
+          author: a.author,
+          description: a.description,
+          date_created: a.date_created,
+          date_event: '',
+          start_time: a.start_time,
+          end_time: a.end_time,
+          location: a.location,
+          saved: a.saved,
+          latitude: a.coordinate.latitude,
+          longitude: a.coordinate.longitude,
+        })
+       }
+      } 
+    
+    
         return (
             <ScrollView style={styles.container}>
                 <Text style={styles.headings}>new events</Text>
@@ -76,9 +72,9 @@ export default class NewScreen extends React.Component {
                 <View style={{height: 50}}/>
             </ScrollView>
     );
-  }
+  
 }
-
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
