@@ -8,14 +8,22 @@ import axios from 'axios'
 import HideView from '../../components/HideView.js'
 
 export default class MapScreen extends React.Component {
-
   static navigationOptions = {
-    title: 'Map',
-  };
+    title: "Map",
+  }
 
   constructor(props) {
     super(props)
+
     this.state = this.getInitialState()
+
+    axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
+    .then(res => {
+      this.setState({events: res.data.data})
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }
 
   //Sets state upon screen rendering
@@ -47,17 +55,6 @@ export default class MapScreen extends React.Component {
       instructionVisible: false,
     }
   }
-
-  componentDidMount() {
-    axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
-      .then(res => {
-        this.setState({events: res.data.data})
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
 
 
   //ADD EVENT FUNCTIONS
@@ -333,6 +330,7 @@ export default class MapScreen extends React.Component {
       startDatetimeSelected: new Date(),
       endDatetimeSelected: new Date(),
       addingEvent: false,
+      instructionVisible: false,
     })
   }
 
@@ -401,6 +399,7 @@ export default class MapScreen extends React.Component {
 
   //RENDERING
   render() {
+    const {navigate} = this.props.navigation
     return (
       <View style={styles.container}>
         <Overlay visible={this.state.createModalVisible}
@@ -509,17 +508,19 @@ export default class MapScreen extends React.Component {
 
 
         <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
-          onClose={this.onViewClose}>
-          <Text>{this.getRecentMarker().name}</Text>
-          <Text>{this.getRecentMarker().description}</Text>
-          <Text>{this.getRecentMarker().location}</Text>
-          <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
-          <TouchableOpacity style={styles.modalCancel}
-            onPress = {() => this.deleteEvent()}>
-            <Text>Delete Event</Text>
-          </TouchableOpacity>
+          onClose={this.onViewClose}
+          childrenWrapperStyle={styles.viewEventOverlay}>
+          <View>
+            <Text>{this.getRecentMarker().name}</Text>
+            <Text>{this.getRecentMarker().description}</Text>
+            <Text>{this.getRecentMarker().location}</Text>
+            <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
+            <TouchableOpacity style={styles.modalCancel}
+              onPress = {() => this.deleteEvent()}>
+              <Text>Delete Event</Text>
+            </TouchableOpacity>
+          </View>
         </Overlay>
-
 
 
         <MapView style={styles.mapContainer}
@@ -543,7 +544,8 @@ export default class MapScreen extends React.Component {
         
         <HideView hide={this.state.addingEvent}>
           <TouchableOpacity style={styles.addOverlay}
-            onPress = {() => this.onAddEventPress()}>
+            onPress = {() => navigate('AddEvent')}//{() => this.onAddEventPress()}>}
+            >
             <Image source={require('../../assets/images/AddEvent.png')}
               style = {{width: 100, height: 100}}
               resizeMode='contain'/>
@@ -650,5 +652,12 @@ const styles = StyleSheet.create({
     closeCreateText: {
       fontSize: 40,
       color: '#4E2A84',
+    },
+    viewEventOverlay: {
+      marginLeft: 20,
+      marginRight: 20,
+      marginTop: 20,
+      height: 500,
+      borderRadius: 25,
     },
   });

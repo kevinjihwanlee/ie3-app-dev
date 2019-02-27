@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createMaterialTopTabNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import LinksScreen from '../screens/LinksScreen';
+import AddEventScreen from '../screens/AddEventScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import MapScreen from '../screens/home_screens/MapScreen';
@@ -11,12 +11,14 @@ import NewScreen from '../screens/home_screens/NewScreen';
 import HotScreen from '../screens/home_screens/HotScreen';
 
 const HomeStack = createMaterialTopTabNavigator({
-  Map: MapScreen,
+  Map: createStackNavigator({
+    Map: {screen: MapScreen, navigationOptions: {header: null}},
+    AddEvent: {screen: AddEventScreen, navigationOptions: {header: null}},
+  }),
   New: NewScreen,
   Hot: HotScreen
 },
 {
-  navigationOptions: {},
   tabBarOptions: {
     style: {
       backgroundColor: '#4E2A84',
@@ -45,21 +47,6 @@ HomeStack.navigationOptions = {
   ),
 };
 
-/*
-const LinksStack = createStackNavigator({
-  Links: LinksScreen,
-});
-
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
-    />
-  ),
-};
-*/
 
 const ProfileStack = createStackNavigator({
   Profile: ProfileScreen,
@@ -98,6 +85,9 @@ export default createBottomTabNavigator(
     SettingsStack,
   },
   {
+    navigationOptions: ({navigation}) => ({
+      
+    }),
     tabBarOptions:{
       activeTintColor: '#4E2A84',
       inaactiveTintColor: '#fff'

@@ -1,20 +1,12 @@
 import React from 'react';
-import { Icon } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
-import { ScrollView, StyleSheet,Text, AppRegistry, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet,Text, TextInput, View } from 'react-native';
 import moment from 'moment';
 
-export default class LinksScreen extends React.Component {
+export default class AddEventScreen extends React.Component {
   static navigationOptions = {
-    title: 'Links',
-    headerStyle: {
-      backgroundColor: '#4E2A84', // northwestern purple
-    },
-    headerTitleStyle: {
-      fontWeight: 'bold',
-      color: '#fff'
-    },
-  };
+    title: "Add Event",
+  }
 
   constructor(props) {
     super(props);
