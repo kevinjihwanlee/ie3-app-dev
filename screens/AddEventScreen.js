@@ -35,10 +35,12 @@ export default class AddEventScreen extends React.Component {
 
   //Fires on clicking the Title TextInput
   onTitleFocus() {
-    this.setState({
-      eventNameText: '',
-      eventNameTextColor: '#000',
-    })
+    if (this.state.eventNameTextColor != '#000') {
+      this.setState({
+        eventNameText: '',
+        eventNameTextColor: '#000',
+      })
+    }
   }
 
   //Fires on defocusing the description field
@@ -51,20 +53,22 @@ export default class AddEventScreen extends React.Component {
     }
   }
 
-  //Fires on clicking the Description TextInput
-  onDescriptionFocus() {
-    this.setState({
-      eventDescriptionText: '',
-      eventDescriptionTextColor: '#000',
-    })
+  //Fires on focusing the custom location field
+  onCustomLocationFocus() {
+    if (this.state.customLocationTextColor != '#000') {
+      this.setState({
+        customLocationText: '',
+        customLocationTextColor: '#000',
+      })
+    }
   }
 
-  //Fires on defocusing the description field
-  onDescriptionBlur() {
-    if (this.state.eventDescriptionText === '') {
+  //Fires on defocusing the custom location field
+  onCustomLocationBlur() {
+    if (this.state.customLocationText === '') {
       this.setState({
-        eventDescriptionText: 'Description',
-        eventDescriptionTextColor: '#D3D3D3',
+        customLocationText: 'Location',
+        customLocationTextColor: '#D3D3D3',
       })
     }
   }
@@ -159,20 +163,22 @@ export default class AddEventScreen extends React.Component {
     })
   }
 
-  //Fires on focusing the custom location field
-  onCustomLocationFocus() {
-    this.setState({
-      customLocationText: '',
-      customLocationTextColor: '#000',
-    })
+  //Fires on clicking the Description TextInput
+  onDescriptionFocus() {
+    if (this.state.eventDescriptionColor != '#000') {
+      this.setState({
+        eventDescriptionText: '',
+        eventDescriptionTextColor: '#000',
+      })
+    }
   }
 
-  //Fires on defocusing the custom location field
-  onCustomLocationBlur() {
-    if (this.state.customLocationText === '') {
+  //Fires on defocusing the description field
+  onDescriptionBlur() {
+    if (this.state.eventDescriptionText === '') {
       this.setState({
-        customLocationText: 'Location',
-        customLocationTextColor: '#D3D3D3',
+        eventDescriptionText: 'Description',
+        eventDescriptionTextColor: '#D3D3D3',
       })
     }
   }
@@ -294,10 +300,12 @@ export default class AddEventScreen extends React.Component {
             </TextInput>
           </View>
 
-          <TouchableOpacity style={styles.modalSubmit}
-            onPress= {() => this.onCalendar()}>
-                <Text>Event Date: {Object.keys(this.state.calendarSelected)[0]}</Text>
-          </TouchableOpacity>
+          <View style={styles.dateContainer}>
+            <TouchableOpacity style={styles.modalSubmit}
+              onPress= {() => this.onCalendar()}>
+                  <Text>Event Date: {Object.keys(this.state.calendarSelected)[0]}</Text>
+            </TouchableOpacity>
+          </View>
           <Overlay visible = {this.state.calendarVisible}
             onClose={() => this.onCloseCalendar()} closeOnTouchOutside>
             <Calendar
@@ -308,10 +316,12 @@ export default class AddEventScreen extends React.Component {
               onDayPress={(date) => this.onDateChange(date)}/>
           </Overlay>
 
-          <TouchableOpacity style={styles.modalSubmit}
-            onPress= {() => this.onStartTimePicker()}>
-                <Text>Start Time: {this.parseEditTime(this.state.startDatetimeSelected.toString())}</Text>
-          </TouchableOpacity>
+          <View style={styles.startTimeContainer}>
+            <TouchableOpacity style={styles.modalSubmit}
+              onPress= {() => this.onStartTimePicker()}>
+                  <Text>Start Time: {this.parseEditTime(this.state.startDatetimeSelected.toString())}</Text>
+            </TouchableOpacity>
+          </View>
           <DateTimePicker
             mode="time"
             titleIOS="Start Time" 
@@ -321,10 +331,12 @@ export default class AddEventScreen extends React.Component {
             onCancel={() => this.onCloseStartTimePicker()}
             date={new Date(this.state.startDatetimeSelected)}/>
 
-          <TouchableOpacity style={styles.modalSubmit}
-            onPress= {() => this.onEndTimePicker()}>
-                <Text>End Time: {this.parseEditTime(this.state.endDatetimeSelected.toString())}</Text>
-          </TouchableOpacity>
+          <View style={styles.endTimeContainer}>
+            <TouchableOpacity style={styles.modalSubmit}
+              onPress= {() => this.onEndTimePicker()}>
+                  <Text>End Time: {this.parseEditTime(this.state.endDatetimeSelected.toString())}</Text>
+            </TouchableOpacity>
+          </View>
           <DateTimePicker
             mode="time"
             titleIOS="End Time"
@@ -426,6 +438,32 @@ const styles = StyleSheet.create({
     borderColor: '#ededed',
     backgroundColor: '#fff',
     height: 50,
+    marginBottom: 25,
+  },
+  dateContainer: {
+    alignItems: 'flex-start',
+    borderWidth: 1,
+    paddingLeft: 10,
+    borderColor: '#ededed',
+    backgroundColor: '#fff',
+    height: 50,
+    marginBottom: 5,
+  },
+  startTimeContainer: {
+    alignItems: 'flex-start',
+    borderWidth: 1,
+    paddingLeft: 10,
+    borderColor: '#ededed',
+    backgroundColor: '#fff',
+    height: 50,
+  },
+  endTimeContainer: {
+    alignItems: 'flex-start',
+    borderWidth: 1,
+    paddingLeft: 10,
+    borderColor: '#ededed',
+    backgroundColor: '#fff',
+    height: 50,
     marginBottom: 20,
   },
   descriptionContainer: {
@@ -435,7 +473,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     borderColor: '#ededed',
     backgroundColor: '#fff',
-    height: 150,
+    height: 200,
     marginTop: 15,
   },
 });
