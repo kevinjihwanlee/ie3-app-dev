@@ -11,7 +11,7 @@ Priya Kini,
 Cooper Barth,
 Elise Lee,
 David Chen,
-Kevin Wu,
+Kevin Wu
 
 ## The Application
 At Northwestern University, there has never been a single, standardized platform for students to host events in a medium that can reach students outside their own social circle. The ineffectiveness of Facebook and postering as advertisement mediums fails to inform students about events happening on campus. 
