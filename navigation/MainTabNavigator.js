@@ -10,13 +10,29 @@ import MapScreen from '../screens/home_screens/MapScreen';
 import NewScreen from '../screens/home_screens/NewScreen';
 import HotScreen from '../screens/home_screens/HotScreen';
 
+const MapStack = createStackNavigator({
+  Map: {screen: MapScreen, navigationOptions: {header: null}},
+  AddEvent: {screen: AddEventScreen, navigationOptions: {header: null}},
+})
+
+MapStack.navigationOptions = ({navigation}) => {
+  let tabBarVisible
+  if (navigation.state.routes.length > 1) {
+    navigation.state.routes.map(route => {
+      if (route.routeName === "AddEvent") {
+        tabBarVisible = false;
+      } else {
+        tabBarVisible = true;
+      }
+    })
+  }
+  return {tabBarVisible}
+}
+
 const HomeStack = createMaterialTopTabNavigator({
-  Map: createStackNavigator({
-    Map: {screen: MapScreen, navigationOptions: {header: null}},
-    AddEvent: {screen: AddEventScreen, navigationOptions: {header: null}},
-  }),
+  Map: MapStack,
   New: NewScreen,
-  Hot: HotScreen
+  Hot: HotScreen,
 },
 {
   tabBarOptions: {
@@ -34,7 +50,7 @@ const HomeStack = createMaterialTopTabNavigator({
 });
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: 'Events',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -53,7 +69,7 @@ const ProfileStack = createStackNavigator({
 });
 
 ProfileStack.navigationOptions = {
-  tabBarLabel: 'Profile',
+  tabBarLabel: 'Saved',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}

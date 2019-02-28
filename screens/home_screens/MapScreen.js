@@ -180,7 +180,7 @@ export default class MapScreen extends React.Component {
         <HideView hide={this.state.addingEvent}>
           <TouchableOpacity style={styles.addOverlay}
             onPress = {() => this.onAddEventPress()}>
-            <Image source={require('../../assets/images/AddEvent.png')}
+            <Image source={{uri: 'http://i68.tinypic.com/2e2fb4y.png'}}
               style = {{width: 100, height: 100}}
               resizeMode='contain'/>
           </TouchableOpacity>
@@ -194,7 +194,7 @@ export default class MapScreen extends React.Component {
         <HideView hide={this.state.addingEvent === false}
           style={styles.closeCreate}>
           <TouchableOpacity onPress = {() => this.closeEventAdd()}>
-            <Text style={styles.closeCreateText}>X</Text>
+            <Text style={styles.closeCreateText}>x</Text>
           </TouchableOpacity>
         </HideView>
         
@@ -235,11 +235,11 @@ const styles = StyleSheet.create({
     closeCreate: {
       flex: 1,
       position: 'absolute',
-      top: 10,
-      right: 15,
+      top: 4,
+      right: 25,
     },
     closeCreateText: {
-      fontSize: 40,
+      fontSize: 60,
       color: '#4E2A84',
     },
     viewEventOverlay: {
