@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, TextInput, ScrollView, Image} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Image, AsyncStorage} from 'react-native';
 import MapView from 'react-native-maps';
 import Overlay from 'react-native-modal-overlay';
 import axios from 'axios'
@@ -25,6 +25,15 @@ export default class MapScreen extends React.Component {
 
   //Sets state upon screen rendering
   getInitialState() {
+    try {
+      AsyncStorage.getItem('saved').then((value) => {
+        this.state.savedEvents = JSON.parse(value)
+      })
+    } catch (error) {
+      console.log(error.message)
+      this.state.savedEvents = []
+    }
+
     return {
       events: [],
       region: null,
@@ -119,14 +128,48 @@ export default class MapScreen extends React.Component {
   onViewClose = () => this.setState({viewModalVisible: false})
 
   starEvent() {
-    console.log("Starred!")
+    let marker = this.state.recentMarker
+
+    let savedEvents = this.state.savedEvents
+    let removed = false
+    for (i in savedEvents) {
+      if (savedEvents[i]._id === marker._id) {
+        savedEvents.splice(i, 1)
+        removed = true
+        break
+      }
+    }
+    if (removed === false) {
+      marker.saved += 1
+      savedEvents.push(marker)
+    } else {
+      marker.saved -= 1
+    }
+
+    let events = this.state.events
+    for (i in events) {
+      if (events[i]._id === marker._id) {
+        events[i] = marker
+        break
+      }
+    }
+    
+    this.setState({
+      events: events,
+      recentMarker: marker,
+      savedEvents: savedEvents,
+    })
+  
+    AsyncStorage.setItem('saved', JSON.stringify(savedEvents)).then(() => {
+      console.log(savedEvents)
+    })
   }
 
   deleteEvent() {
     const rm = this.state.recentMarker
     let events = this.state.events
     for (i in events) {
-      if (events[i].name === rm.name) {
+      if (events[i]._id === rm._id) {
         events.splice(i, 1)
         break
       }
@@ -196,6 +239,7 @@ export default class MapScreen extends React.Component {
               <Text>Star Event</Text>
             </TouchableOpacity>
             <Text>{this.getRecentMarker().name}</Text>
+            <Text>{this.getRecentMarker().saved}</Text>
             <Text>{this.getRecentMarker().description}</Text>
             <Text>{this.getRecentMarker().location}</Text>
             <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
