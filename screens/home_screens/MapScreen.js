@@ -194,7 +194,7 @@ export default class MapScreen extends React.Component {
         <HideView hide={this.state.addingEvent === false}
           style={styles.closeCreate}>
           <TouchableOpacity onPress = {() => this.closeEventAdd()}>
-            <Text style={styles.closeCreateText}>X</Text>
+            <Text style={styles.closeCreateText}>x</Text>
           </TouchableOpacity>
         </HideView>
         
@@ -235,11 +235,11 @@ const styles = StyleSheet.create({
     closeCreate: {
       flex: 1,
       position: 'absolute',
-      top: 10,
-      right: 15,
+      top: 5,
+      right: 25,
     },
     closeCreateText: {
-      fontSize: 40,
+      fontSize: 60,
       color: '#4E2A84',
     },
     viewEventOverlay: {
