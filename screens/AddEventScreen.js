@@ -254,13 +254,17 @@ export default class AddEventScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.tabBar}>
           <View style={styles.cancelContainer}>
-            <Text style={styles.cancelButton}>Cancel</Text>
+            <TouchableOpacity onPress = {() => this.onCreateClose()}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.newEventContainer}>
             <Text style={styles.newEventText}>New Event</Text>
           </View>
           <View style={styles.submitContainer}>
-            <Text style={styles.submitButton}>Submit</Text>
+            <TouchableOpacity onPress = {() => this.onSubmit()}>
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <ScrollView style={styles.formContainer}>
@@ -344,16 +348,6 @@ export default class AddEventScreen extends React.Component {
             onCancel={() => this.onCloseEndTimePicker()}
             date={new Date(this.state.endDatetimeSelected)}/>
 
-          <TouchableOpacity style={styles.modalSubmit}
-            onPress = {() => this.onSubmit()}>
-            <Text>Create Event</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.modalCancel}
-            onPress = {() => this.onCreateClose()}>
-            <Text>Cancel</Text>
-          </TouchableOpacity>
-
           <Overlay visible={this.state.errVisible} closeOnTouchOutside
             onClose={() => this.hideError()}>
             <Text>{this.state.errText}</Text>
@@ -385,28 +379,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 20,
+    paddingTop: 20,
   },
-  cancelButton: {
-
+  cancelButtonText: {
+    fontSize: 14,
+    color: '#fff',
   },
   newEventContainer: {
-    paddingTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+    paddingTop: 15,
   },
   newEventText: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
     color: '#fff',
   },
   submitContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     paddingRight: 20,
+    paddingTop: 20,
   },
-  submitButton: {
-    
+  submitButtonText: {
+    fontSize: 14,
+    color: '#fff',
   },
   formContainer: {
     flex: 1,
@@ -436,13 +434,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: 260,
     height: 35,
-  },
-  modalSubmit: {
-    alignSelf: 'center',
-    paddingTop: 15,
-    paddingBottom: 15,
-  },
-  modalCancel: {
-    alignSelf: 'center',
   },
 });
