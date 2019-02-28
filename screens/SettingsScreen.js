@@ -58,13 +58,13 @@ export default class SettingsScreen extends React.Component {
         <Text style={styles.title}>Privacy</Text>
         <View style={styles.switchLineContainer}>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>Protect Your Posts</Text>
+            <Text style={styles.text}>Require Passcode</Text>
           </View>
           <View style={styles.switchContainer}>
             <Switch style={styles.switch}></Switch>
           </View>
         </View>
-        <Text style={styles.description}>Use your phone's Touch ID or passcode to protect your posts and replies so only you can view them.</Text>
+        <Text style={styles.description}>Require a passcode to enter the app on your phone.</Text>
         <TouchableOpacity style={styles.button}
                   onPress={() => this.logOut()}
                   underlayColor='#fff'>
