@@ -127,6 +127,7 @@ export default class MapScreen extends React.Component {
 
   onViewClose = () => this.setState({viewModalVisible: false})
 
+
   starEvent() {
     let marker = this.state.recentMarker
 
@@ -165,16 +166,27 @@ export default class MapScreen extends React.Component {
     })
   }
 
+
   deleteEvent() {
     const rm = this.state.recentMarker
     let events = this.state.events
+    let savedEvents = this.state.savedEvents
     for (i in events) {
       if (events[i]._id === rm._id) {
         events.splice(i, 1)
         break
       }
     }
-    this.setState({events})
+    for (i in savedEvents) {
+      if (savedEvents[i]._id === rm._id) {
+        savedEvents.splice(i, 1)
+        break
+      }
+    }
+    this.setState({
+      events:events, 
+      savedEvents: savedEvents
+    })
 
     axios.delete(`https://quiet-spire-38612.herokuapp.com/api/events/` + this.state.recentMarker._id)
       .then(res => {
@@ -266,7 +278,7 @@ const styles = StyleSheet.create({
   },
   addOverlay: {
     flex: 1,
-    position: 'absolute', 
+    position: 'absolute',
     bottom: 12, 
     right: 12,
   },
