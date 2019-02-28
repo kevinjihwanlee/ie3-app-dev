@@ -301,9 +301,14 @@ export default class AddEventScreen extends React.Component {
           </View>
 
           <View style={styles.dateContainer}>
-            <TouchableOpacity style={styles.modalSubmit}
+            <View style={styles.dateLabel}>
+              <Text style={styles.dateText}>Event Date</Text>
+            </View>
+            <TouchableOpacity style={styles.dateButton}
               onPress= {() => this.onCalendar()}>
-                  <Text>Event Date: {Object.keys(this.state.calendarSelected)[0]}</Text>
+              <Text style={styles.dateText}>
+                {Object.keys(this.state.calendarSelected)[0]}
+              </Text>
             </TouchableOpacity>
           </View>
           <Overlay visible = {this.state.calendarVisible}
@@ -317,9 +322,14 @@ export default class AddEventScreen extends React.Component {
           </Overlay>
 
           <View style={styles.startTimeContainer}>
-            <TouchableOpacity style={styles.modalSubmit}
+            <View style={styles.startTimeLabel}>
+              <Text style={styles.startTimeText}>Start</Text>
+            </View>
+            <TouchableOpacity style={styles.startTimeButton}
               onPress= {() => this.onStartTimePicker()}>
-                  <Text>Start Time: {this.parseEditTime(this.state.startDatetimeSelected.toString())}</Text>
+              <Text style={styles.startTimeText}>
+                {this.parseEditTime(this.state.startDatetimeSelected.toString())}
+              </Text>
             </TouchableOpacity>
           </View>
           <DateTimePicker
@@ -332,9 +342,14 @@ export default class AddEventScreen extends React.Component {
             date={new Date(this.state.startDatetimeSelected)}/>
 
           <View style={styles.endTimeContainer}>
-            <TouchableOpacity style={styles.modalSubmit}
+            <View style={styles.endTimeLabel}>
+              <Text style={styles.endTimeText}>End</Text>
+            </View>
+            <TouchableOpacity style={styles.endTimeButton}
               onPress= {() => this.onEndTimePicker()}>
-                  <Text>End Time: {this.parseEditTime(this.state.endDatetimeSelected.toString())}</Text>
+              <Text style={styles.endTimeText}>
+                {this.parseEditTime(this.state.endDatetimeSelected.toString())}
+              </Text>
             </TouchableOpacity>
           </View>
           <DateTimePicker
@@ -429,7 +444,7 @@ const styles = StyleSheet.create({
     borderColor: '#ededed',
     backgroundColor: '#fff',
     height: 50,
-    marginTop: 15,
+    marginTop: 20,
   },
   locationContainer: {
     alignItems: 'flex-start',
@@ -438,33 +453,62 @@ const styles = StyleSheet.create({
     borderColor: '#ededed',
     backgroundColor: '#fff',
     height: 50,
-    marginBottom: 25,
+    marginBottom: 20,
   },
   dateContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: "space-between",
     borderWidth: 1,
-    paddingLeft: 10,
     borderColor: '#ededed',
     backgroundColor: '#fff',
     height: 50,
-    marginBottom: 5,
+  },
+  dateLabel: {
+    paddingLeft: 15,
+  },
+  dateButton: {
+    paddingRight: 15,
+  },
+  dateText: {
+    fontSize: 16,
   },
   startTimeContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: "space-between",
     borderWidth: 1,
-    paddingLeft: 10,
     borderColor: '#ededed',
     backgroundColor: '#fff',
     height: 50,
   },
+  startTimeLabel: {
+    paddingLeft: 15,
+  },
+  startTimeButton: {
+    paddingRight: 15,
+  },
+  startTimeText: {
+    fontSize: 16,
+  },
   endTimeContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: "space-between",
     borderWidth: 1,
-    paddingLeft: 10,
     borderColor: '#ededed',
     backgroundColor: '#fff',
     height: 50,
-    marginBottom: 20,
+    marginBottom: 10,
+  },
+  endTimeLabel: {
+    paddingLeft: 15,
+  },
+  endTimeButton: {
+    paddingRight: 15,
+  },
+  endTimeText: {
+    fontSize: 16,
   },
   descriptionContainer: {
     alignItems: 'flex-start',
@@ -473,7 +517,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     borderColor: '#ededed',
     backgroundColor: '#fff',
-    height: 200,
+    height: 215,
     marginTop: 15,
   },
 });
