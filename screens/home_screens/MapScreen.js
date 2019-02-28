@@ -32,10 +32,7 @@ export default class MapScreen extends React.Component {
       region: null,
       recentMarker: null,
       viewModalVisible: false,
-      errVisible: false,
-      errText: false,
       addingEvent: false,
-      instructionVisible: false,
     }
   }
 
@@ -44,18 +41,14 @@ export default class MapScreen extends React.Component {
   onAddEventPress() {
     this.setState({
       addingEvent: true,
-      instructionVisible: true,
     })
   }
 
   closeEventAdd() {
     this.setState({
       addingEvent: false,
-      instructionVisible: false,
     })
   }
-
-
 
 
   //MAP FUNCTIONS
@@ -85,7 +78,7 @@ export default class MapScreen extends React.Component {
   onMapClick(e) {
     if (this.state.addingEvent) {
       this.setState({
-        instructionVisible: false,
+        addingEvent: false,
       })
       const {navigate} = this.props.navigation
       navigate('AddEvent', {
@@ -189,7 +182,7 @@ export default class MapScreen extends React.Component {
           </View>
         </Overlay>
         
-        <HideView hide={this.state.addingEvent && this.state.instructionVisible}>
+        <HideView hide={this.state.addingEvent}>
           <TouchableOpacity style={styles.addOverlay}
             onPress = {() => this.onAddEventPress()}>
             <Image source={require('../../assets/images/AddEvent.png')}
@@ -198,12 +191,12 @@ export default class MapScreen extends React.Component {
           </TouchableOpacity>
         </HideView>
 
-        <HideView hide={this.state.instructionVisible === false}
+        <HideView hide={this.state.addingEvent === false}
           style={styles.instructionContainer}>
           <Text style={styles.instructionText}>Choose Marker Location</Text>
         </HideView>
 
-        <HideView hide={this.state.instructionVisible === false}
+        <HideView hide={this.state.addingEvent === false}
           style={styles.closeCreate}>
           <TouchableOpacity onPress = {() => this.closeEventAdd()}>
             <Text style={styles.closeCreateText}>X</Text>

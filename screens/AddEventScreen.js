@@ -12,7 +12,7 @@ export default class AddEventScreen extends React.Component {
   }
 
   getInitialState() {
-    return {
+    let initState = {
       events: this.props.navigation.state.params.events,
       recentLocation: this.props.navigation.state.params.recentLocation,
       eventNameText: 'Event Name',
@@ -22,13 +22,14 @@ export default class AddEventScreen extends React.Component {
       customLocationText: 'Location',
       customLocationTextColor: '#D3D3D3',
       calendarVisible: false,
-      currDate: this.getTodayDate(),
       calendarSelected: {},
       startTimePickerVisible: false,
       endTimePickerVisible: false,
       startDatetimeSelected: new Date(),
       endDatetimeSelected: this.addMinutes(60, Date()),
     }
+    initState.calendarSelected[this.getTodayDate()] = true
+    return initState
   }
 
   //Fires on clicking the Title TextInput
@@ -77,7 +78,6 @@ export default class AddEventScreen extends React.Component {
     this.setState({
       calendarVisible: true,
       calendarSelected: selected,
-      currDate: todayDate,
     })
   }
 
@@ -285,14 +285,14 @@ export default class AddEventScreen extends React.Component {
 
             <TouchableOpacity style={styles.modalSubmit}
               onPress= {() => this.onCalendar()}>
-                  <Text>Event Date: {this.state.currDate}</Text>
+                  <Text>Event Date: {Object.keys(this.state.calendarSelected)[0]}</Text>
             </TouchableOpacity>
             <Overlay visible = {this.state.calendarVisible}
               onClose={() => this.onCloseCalendar()} closeOnTouchOutside>
               <Calendar
-                date = {this.state.currDate}
+                date = {this.getTodayDate()}
                 hideArrows = {false}
-                minDate = {this.state.currDate}
+                minDate = {this.getTodayDate()}
                 markedDates = {this.state.calendarSelected}
                 onDayPress={(date) => this.onDateChange(date)}/>
             </Overlay>
