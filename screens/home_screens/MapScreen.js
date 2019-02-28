@@ -180,7 +180,7 @@ export default class MapScreen extends React.Component {
         <HideView hide={this.state.addingEvent}>
           <TouchableOpacity style={styles.addOverlay}
             onPress = {() => this.onAddEventPress()}>
-            <Image source={require('../../assets/images/AddEvent.png')}
+            <Image source={{uri: 'http://i68.tinypic.com/2e2fb4y.png'}}
               style = {{width: 100, height: 100}}
               resizeMode='contain'/>
           </TouchableOpacity>
