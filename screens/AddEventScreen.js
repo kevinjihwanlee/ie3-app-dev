@@ -468,7 +468,9 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   dateButton: {
+    flex: 1,
     paddingRight: 15,
+    alignItems: 'flex-end',
   },
   dateText: {
     fontSize: 16,
@@ -486,7 +488,9 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   startTimeButton: {
+    flex: 1,
     paddingRight: 15,
+    alignItems: 'flex-end',
   },
   startTimeText: {
     fontSize: 16,
@@ -505,7 +509,9 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   endTimeButton: {
+    flex: 1,
     paddingRight: 15,
+    alignItems: 'flex-end',
   },
   endTimeText: {
     fontSize: 16,
