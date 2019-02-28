@@ -165,7 +165,7 @@ export default class AddEventScreen extends React.Component {
 
   //Fires on clicking the Description TextInput
   onDescriptionFocus() {
-    if (this.state.eventDescriptionColor != '#000') {
+    if (this.state.eventDescriptionTextColor != '#000') {
       this.setState({
         eventDescriptionText: '',
         eventDescriptionTextColor: '#000',

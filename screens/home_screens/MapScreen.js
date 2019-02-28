@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, TextInput, ScrollView, Image} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Image, AsyncStorage} from 'react-native';
 import MapView from 'react-native-maps';
 import Overlay from 'react-native-modal-overlay';
 import axios from 'axios'
@@ -25,6 +25,15 @@ export default class MapScreen extends React.Component {
 
   //Sets state upon screen rendering
   getInitialState() {
+    try {
+      AsyncStorage.getItem('saved').then((value) => {
+        this.state.savedEvents = JSON.parse(value)
+      })
+    } catch (error) {
+      console.log(error.message)
+      this.state.savedEvents = []
+    }
+
     return {
       events: [],
       region: null,
@@ -109,6 +118,7 @@ export default class MapScreen extends React.Component {
         start_time: '',
         end_time: '',
         location: '',
+        date_event: '',
       }
     } else {
       return rm
@@ -117,16 +127,66 @@ export default class MapScreen extends React.Component {
 
   onViewClose = () => this.setState({viewModalVisible: false})
 
+
+  starEvent() {
+    let marker = this.state.recentMarker
+
+    let savedEvents = this.state.savedEvents
+    let removed = false
+    for (i in savedEvents) {
+      if (savedEvents[i]._id === marker._id) {
+        savedEvents.splice(i, 1)
+        removed = true
+        break
+      }
+    }
+    if (removed === false) {
+      marker.saved += 1
+      savedEvents.push(marker)
+    } else {
+      marker.saved -= 1
+    }
+
+    let events = this.state.events
+    for (i in events) {
+      if (events[i]._id === marker._id) {
+        events[i] = marker
+        break
+      }
+    }
+    
+    this.setState({
+      events: events,
+      recentMarker: marker,
+      savedEvents: savedEvents,
+    })
+  
+    AsyncStorage.setItem('saved', JSON.stringify(savedEvents)).then(() => {
+      console.log(savedEvents)
+    })
+  }
+
+
   deleteEvent() {
     const rm = this.state.recentMarker
     let events = this.state.events
+    let savedEvents = this.state.savedEvents
     for (i in events) {
-      if (events[i].name === rm.name) {
+      if (events[i]._id === rm._id) {
         events.splice(i, 1)
         break
       }
     }
-    this.setState({events})
+    for (i in savedEvents) {
+      if (savedEvents[i]._id === rm._id) {
+        savedEvents.splice(i, 1)
+        break
+      }
+    }
+    this.setState({
+      events:events, 
+      savedEvents: savedEvents
+    })
 
     axios.delete(`https://quiet-spire-38612.herokuapp.com/api/events/` + this.state.recentMarker._id)
       .then(res => {
@@ -162,21 +222,6 @@ export default class MapScreen extends React.Component {
           ))}
         </MapView>
 
-        <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
-          onClose={this.onViewClose}
-          childrenWrapperStyle={styles.viewEventOverlay}>
-          <View>
-            <Text>{this.getRecentMarker().name}</Text>
-            <Text>{this.getRecentMarker().description}</Text>
-            <Text>{this.getRecentMarker().location}</Text>
-            <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
-            <TouchableOpacity style={styles.modalCancel}
-              onPress = {() => this.deleteEvent()}>
-              <Text>Delete Event</Text>
-            </TouchableOpacity>
-          </View>
-        </Overlay>
-        
         <HideView hide={this.state.addingEvent}>
           <TouchableOpacity style={styles.addOverlay}
             onPress = {() => this.onAddEventPress()}>
@@ -197,56 +242,76 @@ export default class MapScreen extends React.Component {
             <Text style={styles.closeCreateText}>x</Text>
           </TouchableOpacity>
         </HideView>
-        
+
+        <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
+          onClose={this.onViewClose}
+          childrenWrapperStyle={styles.viewEventOverlay}>
+          <View>
+            <TouchableOpacity onPress = {() => this.starEvent()}>
+              <Text>Star Event</Text>
+            </TouchableOpacity>
+            <Text>{this.getRecentMarker().name}</Text>
+            <Text>{this.getRecentMarker().saved}</Text>
+            <Text>{this.getRecentMarker().description}</Text>
+            <Text>{this.getRecentMarker().location}</Text>
+            <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
+            <Text>{this.getRecentMarker().date_event}</Text>
+            <TouchableOpacity style={styles.modalCancel}
+              onPress = {() => this.deleteEvent()}>
+              <Text>Delete Event</Text>
+            </TouchableOpacity>
+          </View>
+        </Overlay>
+
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-      },
-    mapContainer: {
+  container: {
       flex: 1,
-    },
-    addOverlay: {
-      flex: 1,
-      position: 'absolute', 
-      bottom: 12, 
-      right: 12,
-    },
-    instructionContainer: {
-      flex: 1,
-      position: 'absolute',
-      bottom: 15,
-      alignSelf: 'center',
       backgroundColor: '#fff',
-      borderRadius: 5,
-      opacity: 0.75,
     },
-    instructionText: {
-      fontSize: 20,
-      color: '#4E2A84',
-      fontWeight: 'bold',
-      letterSpacing: 1,
-    },
-    closeCreate: {
-      flex: 1,
-      position: 'absolute',
-      top: 4,
-      right: 25,
-    },
-    closeCreateText: {
-      fontSize: 60,
-      color: '#4E2A84',
-    },
-    viewEventOverlay: {
-      marginLeft: 20,
-      marginRight: 20,
-      marginTop: 20,
-      height: 500,
-      borderRadius: 25,
-    },
-  });
+  mapContainer: {
+    flex: 1,
+  },
+  addOverlay: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 12, 
+    right: 12,
+  },
+  instructionContainer: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    opacity: 0.75,
+  },
+  instructionText: {
+    fontSize: 20,
+    color: '#4E2A84',
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  closeCreate: {
+    flex: 1,
+    position: 'absolute',
+    top: 4,
+    right: 25,
+  },
+  closeCreateText: {
+    fontSize: 60,
+    color: '#4E2A84',
+  },
+  viewEventOverlay: {
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+    height: 500,
+    borderRadius: 25,
+  },
+});

@@ -1,13 +1,17 @@
-# ie3-app-dev
-> IE3 Mobile Dev group with Kevin Lee and Kimberly Kwon (name temporary)
+# veNU
+> IEEE Mobile Development Team - Northwestern Chapter 2019
 
 ## Introduction
-To Priya, Cooper, Elise, David, and Kevin:
+PMs: 
+Kevin Lee
+Kimberly Kwon
 
-We hope that this repository can serve as an enriching experience and thorough resource for your future programming endeavours. Refer to this README for any questions you may have - if the README fails to answer them or is unclear, let us know so we can update the documentation appropriately.
-
-Best,
-Kevin and Kimberly
+Team Members: 
+Priya Kini
+Cooper Barth
+Elise Lee
+David Chen
+Kevin Wu
 
 ## Software that we like
 * **Visual Studio Code:** There are a number of text editors that you can use for writing your code, and it ultimately doesn't matter which one you use...but we like using Visual Studio Code by Microsoft, there are a lot of handy extensions that make your life easier when you code. Download [here](https://code.visualstudio.com/).
