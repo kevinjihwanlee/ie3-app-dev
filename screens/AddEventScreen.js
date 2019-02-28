@@ -45,7 +45,7 @@ export default class AddEventScreen extends React.Component {
   onTitleBlur() {
     if (this.state.eventNameText === '') {
       this.setState({
-        eventNameText: 'EventName',
+        eventNameText: 'Title',
         eventNameTextColor: '#D3D3D3',
       })
     }
@@ -283,8 +283,8 @@ export default class AddEventScreen extends React.Component {
 
           <View style={styles.locationContainer}>
             <TextInput style = {{width: 245,
-                                height: 35,
-                                fontSize: 14,
+                                height: 50,
+                                fontSize: 20,
                                 color: this.state.customLocationTextColor}}
               multiline={false}
               value = {this.state.customLocationText}
@@ -292,19 +292,6 @@ export default class AddEventScreen extends React.Component {
               onFocus = {() => this.onCustomLocationFocus()}
               onBlur = {() => this.onCustomLocationBlur()}>
             </TextInput>
-          </View>
-
-          <View style={styles.descriptionContainer}>
-              <TextInput style = {{width: 245,
-                                  height: 100,
-                                  fontSize: 14,
-                                  color: this.state.eventDescriptionTextColor}}
-                multiline={true}
-                value = {this.state.eventDescriptionText}
-                onChangeText = {(text) => {this.setState({eventDescriptionText:text})}}
-                onFocus = {() => this.onDescriptionFocus()}
-                onBlur = {() => this.onDescriptionBlur()}>
-              </TextInput>
           </View>
 
           <TouchableOpacity style={styles.modalSubmit}
@@ -347,6 +334,19 @@ export default class AddEventScreen extends React.Component {
             onConfirm={(date) => this.onConfirmEndTimePicker(date)}
             onCancel={() => this.onCloseEndTimePicker()}
             date={new Date(this.state.endDatetimeSelected)}/>
+
+          <View style={styles.descriptionContainer}>
+              <TextInput style = {{width: 245,
+                                  height: 100,
+                                  fontSize: 14,
+                                  color: this.state.eventDescriptionTextColor}}
+                multiline={true}
+                value = {this.state.eventDescriptionText}
+                onChangeText = {(text) => {this.setState({eventDescriptionText:text})}}
+                onFocus = {() => this.onDescriptionFocus()}
+                onBlur = {() => this.onDescriptionBlur()}>
+              </TextInput>
+          </View>
 
           <Overlay visible={this.state.errVisible} closeOnTouchOutside
             onClose={() => this.hideError()}>
@@ -408,31 +408,34 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
+    backgroundColor: '#f1ecf9'
   },
   titleContainer: {
-    alignSelf: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     borderWidth: 1,
-    borderColor: '#a9a9a9',
+    paddingLeft: 10,
+    borderColor: '#ededed',
+    backgroundColor: '#fff',
     height: 50,
-    marginBottom: 10,
-  },
-  descriptionContainer: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#a9a9a9',
-    borderRadius: 3,
-    width: 260,
-    height: 100,
+    marginTop: 15,
   },
   locationContainer: {
-    alignSelf: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     borderWidth: 1,
-    borderColor: '#a9a9a9',
-    borderRadius: 5,
-    width: 260,
-    height: 35,
+    paddingLeft: 10,
+    borderColor: '#ededed',
+    backgroundColor: '#fff',
+    height: 50,
+    marginBottom: 20,
+  },
+  descriptionContainer: {
+    alignItems: 'flex-start',
+    borderWidth: 1,
+    paddingLeft: 10,
+    paddingTop: 5,
+    borderColor: '#ededed',
+    backgroundColor: '#fff',
+    height: 150,
+    marginTop: 15,
   },
 });
