@@ -23,8 +23,6 @@ export default class MapScreen extends React.Component {
     )
   }
 
-  
-
   //Sets state upon screen rendering
   getInitialState() {
     return {
@@ -34,20 +32,6 @@ export default class MapScreen extends React.Component {
       viewModalVisible: false,
       addingEvent: false,
     }
-  }
-
-
-  //ADD EVENT FUNCTIONS
-  onAddEventPress() {
-    this.setState({
-      addingEvent: true,
-    })
-  }
-
-  closeEventAdd() {
-    this.setState({
-      addingEvent: false,
-    })
   }
 
 
@@ -74,7 +58,6 @@ export default class MapScreen extends React.Component {
     this.setState({region})
   }
 
-  //Fires on clicking the map
   onMapClick(e) {
     if (this.state.addingEvent) {
       this.setState({
@@ -101,7 +84,22 @@ export default class MapScreen extends React.Component {
     return t.substring(t.indexOf('T') + 1, t.indexOf('.') - 3)
   }
 
-  //VIEW EVENT OVERLAY FUNCTIONS
+
+  //ADD EVENT FUNCTIONS
+  onAddEventPress() {
+    this.setState({
+      addingEvent: true,
+    })
+  }
+
+  closeEventAdd() {
+    this.setState({
+      addingEvent: false,
+    })
+  }
+
+
+  //VIEW EVENT FUNCTIONS
   getRecentMarker() {
     const rm = this.state.recentMarker
     if (rm === null) {
@@ -142,10 +140,7 @@ export default class MapScreen extends React.Component {
   
 
 
-
-  //RENDERING
   render() {
-    const {navigate} = this.props.navigation
     return (
       <View style={styles.container}>
         <MapView style={styles.mapContainer}
@@ -215,51 +210,6 @@ const styles = StyleSheet.create({
       },
     mapContainer: {
       flex: 1,
-    },
-    modalContainer: {
-      borderRadius: 10,
-      width: 300,
-      height: 500,
-      alignSelf: 'center',
-    },
-    modalViewContainer: {
-      flex: 1,
-    },
-    titleContainer: {
-      alignSelf: 'center',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: '#000',
-      borderRadius: 5,
-      width: 260,
-      height: 50,
-      marginBottom: 10,
-    },
-    descriptionContainer: {
-      alignSelf: 'center',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: '#000',
-      borderRadius: 3,
-      width: 260,
-      height: 100,
-    },
-    locationContainer: {
-      alignSelf: 'center',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: '#000',
-      borderRadius: 5,
-      width: 260,
-      height: 35,
-    },
-    modalSubmit: {
-      alignSelf: 'center',
-      paddingTop: 15,
-      paddingBottom: 15,
-    },
-    modalCancel: {
-      alignSelf: 'center',
     },
     addOverlay: {
       flex: 1,

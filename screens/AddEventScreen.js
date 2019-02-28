@@ -353,8 +353,6 @@ export default class AddEventScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: {
-  },
   modalViewContainer: {
     flex: 1,
   },
