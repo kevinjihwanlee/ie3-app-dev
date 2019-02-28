@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     closeCreate: {
       flex: 1,
       position: 'absolute',
-      top: 5,
+      top: 4,
       right: 25,
     },
     closeCreateText: {

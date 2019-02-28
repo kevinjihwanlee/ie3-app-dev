@@ -15,7 +15,7 @@ export default class AddEventScreen extends React.Component {
     let initState = {
       events: this.props.navigation.state.params.events,
       recentLocation: this.props.navigation.state.params.recentLocation,
-      eventNameText: 'Event Name',
+      eventNameText: 'Title',
       eventNameTextColor: '#D3D3D3',
       eventDescriptionText: 'Description',
       eventDescriptionTextColor: '#D3D3D3',
@@ -29,6 +29,7 @@ export default class AddEventScreen extends React.Component {
       endDatetimeSelected: this.addMinutes(60, Date()),
     }
     initState.calendarSelected[this.getTodayDate()] = true
+    
     return initState
   }
 
@@ -213,7 +214,7 @@ export default class AddEventScreen extends React.Component {
   //Fires on closing of the Modal
   onCreateClose() {
     this.setState({
-      eventNameText: 'Event Name',
+      eventNameText: 'Title',
       eventNameTextColor: '#D3D3D3',
       eventDescriptionText: 'Description',
       eventDescriptionTextColor: '#D3D3D3',
@@ -250,119 +251,116 @@ export default class AddEventScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView style={styles.modalViewContainer}>
-            <View style={styles.titleContainer}>
-              <TextInput style = {{width: 245,
-                                  height: 50,
-                                  fontSize: 20,
-                                  color: this.state.eventNameTextColor}}
-                multiline={false}
-                value = {this.state.eventNameText}
-                onChangeText = {(text) => {this.setState({eventNameText:text})}}
-                onFocus = {() => this.onTitleFocus()}
-                onBlur = {() => this.onTitleBlur()}>
-              </TextInput>
-            </View>
+      <ScrollView style={styles.container}>
+        <View style={styles.titleContainer}>
+          <TextInput style = {{width: 245,
+                              height: 50,
+                              fontSize: 20,
+                              color: this.state.eventNameTextColor}}
+            multiline={false}
+            value = {this.state.eventNameText}
+            onChangeText = {(text) => {this.setState({eventNameText:text})}}
+            onFocus = {() => this.onTitleFocus()}
+            onBlur = {() => this.onTitleBlur()}>
+          </TextInput>
+        </View>
 
-            <View style={styles.descriptionContainer}>
-                <TextInput style = {{width: 245,
-                                    height: 100,
-                                    fontSize: 14,
-                                    color: this.state.eventDescriptionTextColor}}
-                  multiline={true}
-                  value = {this.state.eventDescriptionText}
-                  onChangeText = {(text) => {this.setState({eventDescriptionText:text})}}
-                  onFocus = {() => this.onDescriptionFocus()}
-                  onBlur = {() => this.onDescriptionBlur()}>
-                </TextInput>
-            </View>
+        <View style={styles.locationContainer}>
+          <TextInput style = {{width: 245,
+                              height: 35,
+                              fontSize: 14,
+                              color: this.state.customLocationTextColor}}
+            multiline={false}
+            value = {this.state.customLocationText}
+            onChangeText = {(text) => {this.setState({customLocationText:text})}}
+            onFocus = {() => this.onCustomLocationFocus()}
+            onBlur = {() => this.onCustomLocationBlur()}>
+          </TextInput>
+        </View>
 
-            <TouchableOpacity style={styles.modalSubmit}
-              onPress= {() => this.onCalendar()}>
-                  <Text>Event Date: {Object.keys(this.state.calendarSelected)[0]}</Text>
-            </TouchableOpacity>
-            <Overlay visible = {this.state.calendarVisible}
-              onClose={() => this.onCloseCalendar()} closeOnTouchOutside>
-              <Calendar
-                date = {this.getTodayDate()}
-                hideArrows = {false}
-                minDate = {this.getTodayDate()}
-                markedDates = {this.state.calendarSelected}
-                onDayPress={(date) => this.onDateChange(date)}/>
-            </Overlay>
+        <View style={styles.descriptionContainer}>
+            <TextInput style = {{width: 245,
+                                height: 100,
+                                fontSize: 14,
+                                color: this.state.eventDescriptionTextColor}}
+              multiline={true}
+              value = {this.state.eventDescriptionText}
+              onChangeText = {(text) => {this.setState({eventDescriptionText:text})}}
+              onFocus = {() => this.onDescriptionFocus()}
+              onBlur = {() => this.onDescriptionBlur()}>
+            </TextInput>
+        </View>
 
-            <TouchableOpacity style={styles.modalSubmit}
-              onPress= {() => this.onStartTimePicker()}>
-                  <Text>Start Time: {this.parseEditTime(this.state.startDatetimeSelected.toString())}</Text>
-            </TouchableOpacity>
-            <DateTimePicker
-              mode="time"
-              titleIOS="Start Time" 
-              is24Hour={false}
-              isVisible={this.state.startTimePickerVisible}
-              onConfirm={(date) => this.onConfirmStartTimePicker(date)}
-              onCancel={() => this.onCloseStartTimePicker()}
-              date={new Date(this.state.startDatetimeSelected)}
-            />
+        <TouchableOpacity style={styles.modalSubmit}
+          onPress= {() => this.onCalendar()}>
+              <Text>Event Date: {Object.keys(this.state.calendarSelected)[0]}</Text>
+        </TouchableOpacity>
+        <Overlay visible = {this.state.calendarVisible}
+          onClose={() => this.onCloseCalendar()} closeOnTouchOutside>
+          <Calendar
+            date = {this.getTodayDate()}
+            hideArrows = {false}
+            minDate = {this.getTodayDate()}
+            markedDates = {this.state.calendarSelected}
+            onDayPress={(date) => this.onDateChange(date)}/>
+        </Overlay>
 
-            <TouchableOpacity style={styles.modalSubmit}
-              onPress= {() => this.onEndTimePicker()}>
-                  <Text>End Time: {this.parseEditTime(this.state.endDatetimeSelected.toString())}</Text>
-            </TouchableOpacity>
-            <DateTimePicker
-              mode="time"
-              titleIOS="End Time"
-              is24Hour={false}
-              isVisible={this.state.endTimePickerVisible}
-              minimumDate={this.state.startDatetimeSelected}
-              onConfirm={(date) => this.onConfirmEndTimePicker(date)}
-              onCancel={() => this.onCloseEndTimePicker()}
-              date={new Date(this.state.endDatetimeSelected)}
-            />
+        <TouchableOpacity style={styles.modalSubmit}
+          onPress= {() => this.onStartTimePicker()}>
+              <Text>Start Time: {this.parseEditTime(this.state.startDatetimeSelected.toString())}</Text>
+        </TouchableOpacity>
+        <DateTimePicker
+          mode="time"
+          titleIOS="Start Time" 
+          is24Hour={false}
+          isVisible={this.state.startTimePickerVisible}
+          onConfirm={(date) => this.onConfirmStartTimePicker(date)}
+          onCancel={() => this.onCloseStartTimePicker()}
+          date={new Date(this.state.startDatetimeSelected)}/>
 
-            <View style={styles.locationContainer}>
-              <TextInput style = {{width: 245,
-                                  height: 35,
-                                  fontSize: 14,
-                                  color: this.state.customLocationTextColor}}
-                multiline={false}
-                value = {this.state.customLocationText}
-                onChangeText = {(text) => {this.setState({customLocationText:text})}}
-                onFocus = {() => this.onCustomLocationFocus()}
-                onBlur = {() => this.onCustomLocationBlur()}>
-              </TextInput>
-            </View>
+        <TouchableOpacity style={styles.modalSubmit}
+          onPress= {() => this.onEndTimePicker()}>
+              <Text>End Time: {this.parseEditTime(this.state.endDatetimeSelected.toString())}</Text>
+        </TouchableOpacity>
+        <DateTimePicker
+          mode="time"
+          titleIOS="End Time"
+          is24Hour={false}
+          isVisible={this.state.endTimePickerVisible}
+          minimumDate={this.state.startDatetimeSelected}
+          onConfirm={(date) => this.onConfirmEndTimePicker(date)}
+          onCancel={() => this.onCloseEndTimePicker()}
+          date={new Date(this.state.endDatetimeSelected)}/>
 
-            <TouchableOpacity style={styles.modalSubmit}
-              onPress = {() => this.onSubmit()}>
-              <Text>Create Event</Text>
-            </TouchableOpacity>
+        <TouchableOpacity style={styles.modalSubmit}
+          onPress = {() => this.onSubmit()}>
+          <Text>Create Event</Text>
+        </TouchableOpacity>
 
-            <TouchableOpacity style={styles.modalCancel}
-              onPress = {() => this.onCreateClose()}>
-              <Text>Cancel</Text>
-            </TouchableOpacity>
+        <TouchableOpacity style={styles.modalCancel}
+          onPress = {() => this.onCreateClose()}>
+          <Text>Cancel</Text>
+        </TouchableOpacity>
 
-            <Overlay visible={this.state.errVisible} closeOnTouchOutside
-              onClose={() => this.hideError()}>
-              <Text>{this.state.errText}</Text>
-            </Overlay>
-          </ScrollView>   
+        <Overlay visible={this.state.errVisible} closeOnTouchOutside
+          onClose={() => this.hideError()}>
+          <Text>{this.state.errText}</Text>
+        </Overlay>
+      </ScrollView>   
     )
   }
 }
 
 const styles = StyleSheet.create({
-  modalViewContainer: {
+  container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   titleContainer: {
     alignSelf: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
-    width: 260,
+    borderColor: '#a9a9a9',
     height: 50,
     marginBottom: 10,
   },
@@ -370,7 +368,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#a9a9a9',
     borderRadius: 3,
     width: 260,
     height: 100,
@@ -379,7 +377,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#a9a9a9',
     borderRadius: 5,
     width: 260,
     height: 35,
@@ -392,5 +390,4 @@ const styles = StyleSheet.create({
   modalCancel: {
     alignSelf: 'center',
   },
-
 });
