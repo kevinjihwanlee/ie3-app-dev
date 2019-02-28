@@ -80,14 +80,10 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator(
   {
     HomeStack,
-    //LinksStack,
     ProfileStack,
     SettingsStack,
   },
   {
-    navigationOptions: ({navigation}) => ({
-      
-    }),
     tabBarOptions:{
       activeTintColor: '#4E2A84',
       inaactiveTintColor: '#fff'
