@@ -109,6 +109,7 @@ export default class MapScreen extends React.Component {
         start_time: '',
         end_time: '',
         location: '',
+        date_event: '',
       }
     } else {
       return rm
@@ -116,6 +117,10 @@ export default class MapScreen extends React.Component {
   }
 
   onViewClose = () => this.setState({viewModalVisible: false})
+
+  starEvent() {
+    console.log("Starred!")
+  }
 
   deleteEvent() {
     const rm = this.state.recentMarker
@@ -162,21 +167,6 @@ export default class MapScreen extends React.Component {
           ))}
         </MapView>
 
-        <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
-          onClose={this.onViewClose}
-          childrenWrapperStyle={styles.viewEventOverlay}>
-          <View>
-            <Text>{this.getRecentMarker().name}</Text>
-            <Text>{this.getRecentMarker().description}</Text>
-            <Text>{this.getRecentMarker().location}</Text>
-            <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
-            <TouchableOpacity style={styles.modalCancel}
-              onPress = {() => this.deleteEvent()}>
-              <Text>Delete Event</Text>
-            </TouchableOpacity>
-          </View>
-        </Overlay>
-        
         <HideView hide={this.state.addingEvent}>
           <TouchableOpacity style={styles.addOverlay}
             onPress = {() => this.onAddEventPress()}>
@@ -197,56 +187,75 @@ export default class MapScreen extends React.Component {
             <Text style={styles.closeCreateText}>x</Text>
           </TouchableOpacity>
         </HideView>
-        
+
+        <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
+          onClose={this.onViewClose}
+          childrenWrapperStyle={styles.viewEventOverlay}>
+          <View>
+            <TouchableOpacity onPress = {() => this.starEvent()}>
+              <Text>Star Event</Text>
+            </TouchableOpacity>
+            <Text>{this.getRecentMarker().name}</Text>
+            <Text>{this.getRecentMarker().description}</Text>
+            <Text>{this.getRecentMarker().location}</Text>
+            <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
+            <Text>{this.getRecentMarker().date_event}</Text>
+            <TouchableOpacity style={styles.modalCancel}
+              onPress = {() => this.deleteEvent()}>
+              <Text>Delete Event</Text>
+            </TouchableOpacity>
+          </View>
+        </Overlay>
+
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-      },
-    mapContainer: {
+  container: {
       flex: 1,
-    },
-    addOverlay: {
-      flex: 1,
-      position: 'absolute', 
-      bottom: 12, 
-      right: 12,
-    },
-    instructionContainer: {
-      flex: 1,
-      position: 'absolute',
-      bottom: 15,
-      alignSelf: 'center',
       backgroundColor: '#fff',
-      borderRadius: 5,
-      opacity: 0.75,
     },
-    instructionText: {
-      fontSize: 20,
-      color: '#4E2A84',
-      fontWeight: 'bold',
-      letterSpacing: 1,
-    },
-    closeCreate: {
-      flex: 1,
-      position: 'absolute',
-      top: 4,
-      right: 25,
-    },
-    closeCreateText: {
-      fontSize: 60,
-      color: '#4E2A84',
-    },
-    viewEventOverlay: {
-      marginLeft: 20,
-      marginRight: 20,
-      marginTop: 20,
-      height: 500,
-      borderRadius: 25,
-    },
-  });
+  mapContainer: {
+    flex: 1,
+  },
+  addOverlay: {
+    flex: 1,
+    position: 'absolute', 
+    bottom: 12, 
+    right: 12,
+  },
+  instructionContainer: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    opacity: 0.75,
+  },
+  instructionText: {
+    fontSize: 20,
+    color: '#4E2A84',
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  closeCreate: {
+    flex: 1,
+    position: 'absolute',
+    top: 4,
+    right: 25,
+  },
+  closeCreateText: {
+    fontSize: 60,
+    color: '#4E2A84',
+  },
+  viewEventOverlay: {
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+    height: 500,
+    borderRadius: 25,
+  },
+});
