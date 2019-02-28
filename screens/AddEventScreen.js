@@ -203,7 +203,6 @@ export default class AddEventScreen extends React.Component {
 
     axios.post('https://quiet-spire-38612.herokuapp.com/api/events/', newEvent)
       .then(res => {
-        console.log(res.data)
         newEvent._id = res.data.data._id
       })
       .catch(err => {
@@ -238,6 +237,10 @@ export default class AddEventScreen extends React.Component {
   }
 
   submitErrors() {
+    if (this.state.eventNameText === '') {
+      this.setState({errText: "Event name cannot be empty.", errVisible: true})
+      return true
+    }
     for (savedEvent of this.state.events) {
       if (this.state.eventNameText === savedEvent.name) {
         this.setState({errText: "Event name already taken.", errVisible: true})

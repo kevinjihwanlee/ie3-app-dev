@@ -14,7 +14,9 @@ export default class MapScreen extends React.Component {
       payload => {
         axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
           .then(res => {
-            this.setState({events: res.data.data})
+            this.setState({events: res.data.data}), () => {
+              this.forceUpdate()
+            } 
           })
           .catch(err => {
             console.log(err)
@@ -162,7 +164,7 @@ export default class MapScreen extends React.Component {
     })
   
     AsyncStorage.setItem('saved', JSON.stringify(savedEvents)).then(() => {
-      console.log(savedEvents)
+      console.log("saved")
     })
   }
 
