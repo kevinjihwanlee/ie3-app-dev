@@ -70,14 +70,8 @@ export default class AddEventScreen extends React.Component {
 
   //Fires on pressing the calendar button
   onCalendar() {
-    let selected = this.state.calendarSelected
-    let todayDate = this.getTodayDate()
-    if (Object.keys(selected).length === 0) {
-      selected[todayDate] = {selected: true}
-    }
     this.setState({
       calendarVisible: true,
-      calendarSelected: selected,
     })
   }
 
