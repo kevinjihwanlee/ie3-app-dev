@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
   dateContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     borderWidth: 1,
     borderColor: '#ededed',
     backgroundColor: '#fff',

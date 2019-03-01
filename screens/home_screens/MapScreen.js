@@ -315,21 +315,20 @@ export default class MapScreen extends React.Component {
           containerStyle={styles.viewEventContainer}>
 
           <View style={styles.eventNameContainer}>
-            <Text>{this.getRecentMarker().name}</Text>
+            <Text style={styles.eventNameText}>{this.getRecentMarker().name}</Text>
+          </View>
+
+          <View style={styles.locationContainer}>
+            <Text style={styles.locationText}>{this.getRecentMarker().location}</Text>
           </View>
           
           <View style={styles.dateTimeContainer}>
-            <View style={styles.dateContainer}>
-              <Text>{this.getRecentMarker().date_event}</Text>
-            </View>
-            <View style={styles.timeContainer}>
-              <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
-            </View>
+            <Text style={styles.dateTimeText}>
+              {this.getRecentMarker().date_event + "  ~  " + this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}
+            </Text>
           </View>
-          
-          <View style={styles.locationContainer}>
-            <Text>{this.getRecentMarker().location}</Text>
-          </View>
+
+          <Text>{this.getRecentMarker().description}</Text>
 
           <TouchableOpacity onPress = {() => this.starEvent()}>
             <Text>Star Event</Text>
@@ -340,7 +339,7 @@ export default class MapScreen extends React.Component {
             onPress = {() => this.deleteEvent()}>
             <Text>Delete Event</Text>
           </TouchableOpacity>
-          <Text>{this.getRecentMarker().description}</Text>
+          
         </Overlay>
 
       </View>
@@ -394,22 +393,32 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginTop: 20,
-    height: 200,
+    height: 300,
     borderRadius: 25,
   },
   eventNameContainer: {
-    alignContent: 'center'
+    marginTop: 10,
+    alignContent: 'center',
+    justifyContent: 'space-between',
   },
-  dateTimeContainer: {
-    alignContent: 'center'
-  },
-  dateContainer: {
-    alignContent: 'center'
-  },
-  timeContainer: {
-    alignContent: 'center'
+  eventNameText: {
+    fontWeight: 'bold',
+    fontSize: 28,
   },
   locationContainer: {
-    alignContent: 'center'
+    marginTop: 3,
+  },
+  locationText: {
+    fontStyle: "italic",
+    fontSize: 18,
+  },
+  dateTimeContainer: {
+    marginTop: 3,
+    width: 250,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  dateTimeText: {
+    fontSize: 18,
   },
 });
