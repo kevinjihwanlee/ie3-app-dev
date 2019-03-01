@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createMaterialTopTabNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import AddEventScreen from '../screens/AddEventScreen';
+import AddEventScreen from '../screens/home_screens/AddEventScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SavedScreen from '../screens/SavedScreen';
 import MapScreen from '../screens/home_screens/MapScreen';
@@ -16,7 +16,7 @@ const MapStack = createStackNavigator({
 })
 
 MapStack.navigationOptions = ({navigation}) => {
-  let tabBarVisible
+  let tabBarVisible;
   if (navigation.state.routes.length > 1) {
     navigation.state.routes.map(route => {
       if (route.routeName === "AddEvent") {
