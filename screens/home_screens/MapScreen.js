@@ -445,14 +445,14 @@ const styles = StyleSheet.create({
   eventNameContainer: {
     marginTop: 10,
     alignContent: 'center',
-    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   eventNameText: {
     fontWeight: 'bold',
     fontSize: 28,
   },
   locationContainer: {
-    marginTop: 3,
+    marginTop: 5,
   },
   locationText: {
     fontStyle: "italic",
