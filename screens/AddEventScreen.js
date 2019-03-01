@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet,Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet,Text, TextInput, View, TouchableOpacity, AsyncStorage } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import Overlay from 'react-native-modal-overlay';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -9,6 +9,28 @@ export default class AddEventScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.getInitialState()
+
+    this.props.navigation.addListener('willFocus', 
+      payload => {
+        axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
+          .then(res => {
+            this.setState({events: res.data.data}), () => {
+              this.forceUpdate()
+            } 
+          })
+          .catch(err => {
+            console.log(err)
+          })
+          
+        try {
+          AsyncStorage.getItem('myEvents').then((value) => {
+            this.state.myEvents = JSON.parse(value)
+          })
+        } catch (error) {
+          console.log(error.message)
+        }
+      }
+    )
   }
 
   getInitialState() {
@@ -27,6 +49,7 @@ export default class AddEventScreen extends React.Component {
       endTimePickerVisible: false,
       startDatetimeSelected: new Date(),
       endDatetimeSelected: this.addMinutes(60, Date()),
+      myEvents: [],
     }
     initState.calendarSelected[this.getTodayDate()] = true
     
@@ -201,17 +224,31 @@ export default class AddEventScreen extends React.Component {
       coordinate: this.state.recentLocation,
     }
 
+    let myEvents = this.state.myEvents
+    if (myEvents === null) {
+      myEvents = [newEvent]
+    } else {
+      myEvents.push(newEvent)
+    }
+    this.setState({myEvents})
+
+    AsyncStorage.setItem('myEvents', JSON.stringify(myEvents)).then(() => {
+      console.log("Added to My Events")
+    })
+
     axios.post('https://quiet-spire-38612.herokuapp.com/api/events/', newEvent)
       .then(res => {
         newEvent._id = res.data.data._id
+      }).then(() => {
+        try {
+          
+        } catch {
+
+        }
       })
       .catch(err => {
         console.log(err)
       })
-
-    let e = this.state.events
-    e.push(newEvent)
-    this.setState({events: e})
 
     this.onCreateClose()
   }

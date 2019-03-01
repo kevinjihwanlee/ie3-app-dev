@@ -21,27 +21,36 @@ export default class MapScreen extends React.Component {
           .catch(err => {
             console.log(err)
           })
+
+        try {
+          AsyncStorage.getItem('saved').then((value) => {
+            this.state.savedEvents = JSON.parse(value)
+          })
+        } catch (error) {
+          console.log(error.message)
+        }
+    
+        try {
+          AsyncStorage.getItem('myEvents').then((value) => {
+            this.state.myEvents = JSON.parse(value)
+          })
+        } catch (error) {
+          console.log(error.message)
+        }
       }
     )
   }
 
   //Sets state upon screen rendering
   getInitialState() {
-    try {
-      AsyncStorage.getItem('saved').then((value) => {
-        this.state.savedEvents = JSON.parse(value)
-      })
-    } catch (error) {
-      console.log(error.message)
-      this.state.savedEvents = []
-    }
-
     return {
       events: [],
       region: null,
       recentMarker: null,
       viewModalVisible: false,
       addingEvent: false,
+      savedEvents: [],
+      myEvents: [],
     }
   }
 
@@ -156,11 +165,20 @@ export default class MapScreen extends React.Component {
         break
       }
     }
+
+    let myEvents = this.state.myEvents
+    for (i in myEvents) {
+      if (myEvents[i]._id === marker._id) {
+        myEvents[i] = marker
+        break
+      }
+    }
     
     this.setState({
       events: events,
       recentMarker: marker,
       savedEvents: savedEvents,
+      myEvents: myEvents,
     })
   
     AsyncStorage.setItem('saved', JSON.stringify(savedEvents)).then(() => {
@@ -173,6 +191,7 @@ export default class MapScreen extends React.Component {
     const rm = this.state.recentMarker
     let events = this.state.events
     let savedEvents = this.state.savedEvents
+    let myEvents = this.state.myEvents
     for (i in events) {
       if (events[i]._id === rm._id) {
         events.splice(i, 1)
@@ -185,9 +204,16 @@ export default class MapScreen extends React.Component {
         break
       }
     }
+    for (i in myEvents) {
+      if (myEvents[i]._id === rm._id) {
+        myEvents.splice(i, 1)
+        break
+      }
+    }
     this.setState({
-      events:events, 
-      savedEvents: savedEvents
+      events: events, 
+      savedEvents: savedEvents,
+      myEvents: myEvents
     })
 
     axios.delete(`https://quiet-spire-38612.herokuapp.com/api/events/` + this.state.recentMarker._id)
