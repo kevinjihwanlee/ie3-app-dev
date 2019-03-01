@@ -230,14 +230,6 @@ export default class MapScreen extends React.Component {
     AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
   }
 
-  getStarText(event) {
-    if (this.isStarred(event)) {
-      return "Event Saved!"
-    } else {
-      return "Save Event"
-    }
-  }
-
   isMyEvent(event) {
     if (event.name === "Error") {
       return
@@ -365,7 +357,7 @@ export default class MapScreen extends React.Component {
           
           <View style={styles.starButtonContainerStyle}>
             <TouchableOpacity onPress = {() => this.saveEvent()}>
-              <Text>{this.getStarText(this.getRecentMarker())}</Text>
+              <Text>{this.isStarred(this.getRecentMarker()) ? '★' : '☆'}</Text>
             </TouchableOpacity>
           </View>
           
@@ -377,7 +369,7 @@ export default class MapScreen extends React.Component {
             <Text style={styles.savedText}>{(this.getRecentMarker().saved === undefined) ? '  0' : '  ' + this.getRecentMarker().saved}</Text>
           </View>
 
-          <HideView hide={this.state.editVisible}>
+          <HideView hide={!this.state.editVisible}>
             <TouchableOpacity style={styles.modalCancel}
               onPress = {() => this.deleteEvent()}>
               <Text>Delete Event</Text>
@@ -385,7 +377,6 @@ export default class MapScreen extends React.Component {
           </HideView>
 
         </Overlay>
-
       </View>
     )
   }

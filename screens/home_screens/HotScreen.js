@@ -33,13 +33,17 @@ export default class HotScreen extends React.Component {
   }
 
     render() {
+      const hotEvents = this.state.events.sort(function(a, b) {
+        return b.saved - a.saved
+      })
+      const hotDateEvents = hotEvents.sort(function(a, b) {
+        return Date.parse(b.start_time) - Date.parse(a.start_time)
+      })
       return (
         <ScrollView style={styles.container}>
           <Text style={styles.headings}>hot events</Text>
           <View style={styles.divider}/>
-          <EventItem events={this.state.events.sort(function(a, b) {
-            return b.saved - a.saved
-          })}></EventItem>
+          <EventItem events={hotDateEvents}></EventItem>
         </ScrollView>
     );
   }
