@@ -333,15 +333,22 @@ export default class MapScreen extends React.Component {
           <View style={styles.descriptionContainer}>
             <Text style={styles.descriptionText}>{this.getRecentMarker().description}</Text>
           </View>
+          
+          <View style={styles.starButtonContainerStyle}>
+            <TouchableOpacity onPress = {() => this.starEvent()}>
+              <Text>{this.getStarText(this.getRecentMarker())}</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <View style={styles.numSaved}>
+            <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
+          </View>
 
-          <TouchableOpacity onPress = {() => this.starEvent()}>
-            <Text>{this.getStarText(this.getRecentMarker())}</Text>
-          </TouchableOpacity>
-          <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
         </Overlay>
 
         <Overlay visible={this.state.editModalVisible} closeOnTouchOutside
-          style={styles.editViewContainer}
+          childrenWrapperStyle={styles.editEventOverlay}
+          containerStyle={styles.editEventContainer}
           onClose={this.onEditClose}>
           <View style={styles.eventNameContainer}>
             <Text style={styles.eventNameText}>{this.getRecentMarker().name}</Text>
@@ -358,13 +365,19 @@ export default class MapScreen extends React.Component {
           </View>
 
           <View style={styles.descriptionContainer}>
-            <Text style={styles.descriptionText}>{this.getRecentMarker().description}</Text>
+            <Text>{this.getRecentMarker().description}</Text>
           </View>
 
-          <TouchableOpacity onPress = {() => this.starEvent()}>
-            <Text>{this.getStarText(this.getRecentMarker())}</Text>
-          </TouchableOpacity>
-          <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
+          <View style={styles.starButtonContainerStyle}>
+            <TouchableOpacity onPress = {() => this.starEvent()}>
+              <Text>{this.getStarText(this.getRecentMarker())}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.numSaved}>
+            <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
+          </View>
+
           <TouchableOpacity style={styles.modalCancel}
             onPress = {() => this.deleteEvent()}>
             <Text>Delete Event</Text>
@@ -419,10 +432,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.25)",
   },
   viewEventOverlay: {
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20,
-    height: 250,
     borderRadius: 25,
     backgroundColor: '#fff'
   },
@@ -447,31 +456,25 @@ const styles = StyleSheet.create({
     width: 250,
     flexDirection: 'row',
     justifyContent: 'center',
+    marginBottom: 10,
   },
   dateTimeText: {
     fontSize: 18,
   },
   descriptionContainer: {
-    marginTop: 12,
+    marginBottom: 12,
   },
-  descriptionText: {},
-  editViewContainer: {
-    flex: 1,
-    position: 'absolute',
-    bottom: 10,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    backgroundColor: '#4E2A84',
+  starButtonContainerStyle: {
+    marginBottom: 10,
   },
-  editView: {
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20,
-    height: 50,
-    borderRadius: 10,
+  numSaved: {
+    marginBottom: 10,
   },
-  editText: {
-    color: '#fff',
-  }
+  editEventOverlay: {
+    borderRadius: 25,
+    backgroundColor: '#fff'
+  },
+  editEventContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
+  },
 });
