@@ -3,9 +3,9 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createMaterialTopTabNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import AddEventScreen from '../screens/AddEventScreen';
+import AddEventScreen from '../screens/home_screens/AddEventScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import SavedScreen from '../screens/SavedScreen';
 import MapScreen from '../screens/home_screens/MapScreen';
 import NewScreen from '../screens/home_screens/NewScreen';
 import HotScreen from '../screens/home_screens/HotScreen';
@@ -16,7 +16,7 @@ const MapStack = createStackNavigator({
 })
 
 MapStack.navigationOptions = ({navigation}) => {
-  let tabBarVisible
+  let tabBarVisible;
   if (navigation.state.routes.length > 1) {
     navigation.state.routes.map(route => {
       if (route.routeName === "AddEvent") {
@@ -64,11 +64,11 @@ HomeStack.navigationOptions = {
 };
 
 
-const ProfileStack = createStackNavigator({
-  Profile: ProfileScreen,
+const SavedStack = createStackNavigator({
+  Saved: SavedScreen,
 });
 
-ProfileStack.navigationOptions = {
+SavedStack.navigationOptions = {
   tabBarLabel: 'Saved',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -96,7 +96,7 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator(
   {
     HomeStack,
-    ProfileStack,
+    SavedStack,
     SettingsStack,
   },
   {

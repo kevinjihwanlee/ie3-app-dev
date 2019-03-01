@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { EventItem } from '../../components/EventItem';
 import axios from 'axios';
 
@@ -28,7 +28,9 @@ export default class NewScreen extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
-          <EventItem events={this.state.events}></EventItem>
+          <EventItem events={this.state.events.sort(function(a, b) {
+            return Date.parse(a.start_time) - Date.parse(b.start_time)
+          })}></EventItem>
       </ScrollView>
     );
   }

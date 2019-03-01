@@ -1,6 +1,5 @@
 import React from 'react';
-import { Platform, Text, View, ScrollView, StyleSheet } from 'react-native';
-import { Icon } from 'expo';
+import { ScrollView, StyleSheet } from 'react-native';
 import { EventItem } from '../../components/EventItem';
 import axios from 'axios'
 
@@ -17,7 +16,7 @@ export default class HotScreen extends React.Component {
           .then(res => {
             this.setState({events: res.data.data}), () => {
               this.forceUpdate()
-            } 
+            }
           })
           .catch(err => {
             console.log(err)
@@ -29,7 +28,9 @@ export default class HotScreen extends React.Component {
     render() {
       return (
         <ScrollView style={styles.container}>
-            <EventItem events={this.state.events}></EventItem>
+            <EventItem events={this.state.events.sort(function(a, b) {
+              return a.saved - b.saved
+          })}></EventItem>
         </ScrollView>
     );
   }

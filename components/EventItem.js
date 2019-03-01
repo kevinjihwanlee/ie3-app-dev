@@ -11,27 +11,39 @@ export class EventItem extends React.Component {
     return (
       <ListItem
         containerStyle={styles.greyBar}
-        leftAvatar={{size:'large', source: { uri: 'https://chinesenewyear.imgix.net/assets/images/21-things-you-didnt-know-about-chinese-new-year/chinese-new-year-lanterns.jpg?q=50&w=640&h=360&auto=format' } }}
         title={event.name}
-        titleStyle={{width:230, fontWeight:'bold'}}
-        subtitle={(event.description.length < 95) ? event.description : (event.description.substring(0, 85) + "...")}
-        subtitleStyle={{width: 230}}
+        titleStyle={{left: 5, width:240, fontWeight:'bold'}}
+        subtitle={(event.description.length < 110) ? event.description : (event.description.substring(0, 100) + "...")}
+        subtitleStyle={{left: 5, width: 250}}
         rightSubtitle={event.is_saved ? '★ ' + event.saved : '☆ ' + event.saved}
-        rightSubtitleStyle={{top: 35, left: 60}}
+        rightSubtitleStyle={{top: 35, left: 80}}
         badge={{value: event.date_event, badgeStyle: {backgroundColor: '#4E2A84', top: -35}}}
       />
     );
   };
 
+  parseViewTime(t) {
+    let newTime = t.substring(t.indexOf('T') + 1, t.indexOf('.') - 3)
+    let newPrefix = parseInt(newTime.substring(0, newTime.indexOf(':'))) - 6
+    if (newPrefix < 0) {
+      newPrefix += 24
+    }
+    newPrefix = newPrefix.toString()
+    if (newPrefix.length === 1) {
+      newPrefix = '0' + newPrefix
+    }
+    return newPrefix + newTime.substring(newTime.indexOf(':'))
+  }
+
   _renderContent = event => {
     return (
       <ListItem
         containerStyle={styles.greyBarExpanded}
-        title={(event.description.length < 95) ? undefined : ("..." + event.description.substring(85) + "\n")}
+        title={(event.description.length < 110) ? undefined : ("..." + event.description.substring(100) + "\n")}
         titleStyle={{width: 240, paddingLeft:10, paddingTop:20, fontSize:15}}
         subtitle={'@ ' + event.location}
         subtitleStyle={{fontWeight:'bold', paddingLeft:10, width: 230, textAlignVertical:'top'}}
-        rightSubtitle={event.start_time +  '-\n' + event.end_time}
+        rightSubtitle={this.parseViewTime(event.start_time) +  '-\n' + this.parseViewTime(event.end_time)}
         rightSubtitleStyle={{paddingTop:20, textAlign:'center'}}
       />
     );
@@ -61,18 +73,17 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginTop: 20,
-    height: 120,
-    borderRadius: 25,
+    height: 110,
+    borderRadius: 15,
   },
   greyBarExpanded: {
     marginTop: -30,
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 20,
-    borderRadius: 25,
+    borderRadius: 15,
     borderColor:'#ededed',
     borderStyle:'dashed',
     borderWidth: 10,
-
   }
 });
