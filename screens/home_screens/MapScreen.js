@@ -140,24 +140,30 @@ export default class MapScreen extends React.Component {
 
   onViewClose = () => this.setState({viewModalVisible: false})
 
+  isStarred(event) {
+    for (item of this.state.savedEvents) {
+      if (event._id === item._id) {
+        return true
+      }
+    }
+    return false
+  }
 
   starEvent() {
     let marker = this.state.recentMarker
 
     let savedEvents = this.state.savedEvents
-    let removed = false
-    for (i in savedEvents) {
-      if (savedEvents[i]._id === marker._id) {
-        savedEvents.splice(i, 1)
-        removed = true
-        break
+    if (this.isStarred(marker)) {
+      marker.saved -= 1
+      for (i in savedEvents) {
+        if (savedEvents[i]._id === marker._id) {
+          savedEvents.splice(i, 1)
+          break
+        }
       }
-    }
-    if (removed === false) {
+    } else {
       marker.saved += 1
       savedEvents.push(marker)
-    } else {
-      marker.saved -= 1
     }
 
     let events = this.state.events
@@ -186,20 +192,31 @@ export default class MapScreen extends React.Component {
     AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
   }
 
-  isStarred(event) {
-    for (item of this.state.savedEvents) {
-      if (event._id === item._id) {
+  getStarText(event) {
+    if (this.isStarred(event)) {
+      return "Starred: 1"
+    } else {
+      return "Starred: 0"
+    }
+  }
+
+  isMyEvent(event) {
+    if (event.name === "Error") {
+      return
+    }
+    for (item of this.state.myEvents) {
+      if (event.name === item.name) {
         return true
       }
     }
     return false
   }
 
-  getStarText(event) {
-    if (this.isStarred(event)) {
-      return 1
+  getMyEventText(event) {
+    if (this.isMyEvent(event)) {
+      return "My Event"
     } else {
-      return 0
+      return "Not My Event"
     }
   }
 
@@ -295,8 +312,9 @@ export default class MapScreen extends React.Component {
             <TouchableOpacity onPress = {() => this.starEvent()}>
               <Text>Star Event</Text>
             </TouchableOpacity>
-            <Text>{this.getRecentMarker().name}</Text>
             <Text>{this.getStarText(this.getRecentMarker())}</Text>
+            <Text>{this.getMyEventText(this.getRecentMarker())}</Text>
+            <Text>{this.getRecentMarker().name}</Text>
             <Text>{this.getRecentMarker().description}</Text>
             <Text>{this.getRecentMarker().location}</Text>
             <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
