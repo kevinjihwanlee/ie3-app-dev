@@ -29,14 +29,7 @@ export default class SavedScreen extends React.Component {
         try {
           AsyncStorage.getItem('saved').then((value) => {
             let savedEvents = JSON.parse(value)
-            const now = new Date()
-            for (i in savedEvents) {
-              if (Date.parse(savedEvents[i].start_time) < now) {
-                savedEvents.splice(i, 1)
-              }
-            }
             this.setState({savedEvents})
-            AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
           })
         } catch (error) {
           console.log(error.message)
@@ -58,7 +51,7 @@ export default class SavedScreen extends React.Component {
             let pastEvents = []
             const now = new Date()
             for (event of events) {
-              if (Date.parse(event.start_time) < now) {
+              if (Date.parse(event.end_time) < now) {
                 pastEvents.push(event)
               }
             }
@@ -89,19 +82,19 @@ export default class SavedScreen extends React.Component {
       <Text style={styles.headings}>saved events</Text>
       <View style={styles.divider}/>
       <EventItem events={this.state.savedEvents.sort(function(a, b) {
-            return Date.parse(a.start_time) - Date.parse(b.start_time)
+            return Date.parse(b.start_time) - Date.parse(a.start_time)
           })}></EventItem>
       <View style={{height: 20}}/>
       <Text style={styles.headings}>created events</Text>
       <View style={styles.divider}/>
       <EventItem events={this.state.myEvents.sort(function(a, b) {
-            return Date.parse(a.start_time) - Date.parse(b.start_time)
+            return Date.parse(b.start_time) - Date.parse(a.start_time)
           })}></EventItem>
       <View style={{height: 20}}/>
       <Text style={styles.headings}>past events</Text>
       <View style={styles.divider}/>
       <EventItem events={this.state.pastEvents.sort(function(a, b) {
-            return Date.parse(a.start_time) - Date.parse(b.start_time)
+            return Date.parse(b.start_time) - Date.parse(a.start_time)
           })}></EventItem>
       <View style={{height: 50}}/>
       </ScrollView>
@@ -149,7 +142,7 @@ const styles = StyleSheet.create({
   headings: {
     fontSize: 50,
     paddingLeft: 30,
-    color: '#c1c1c1',
+    color: '#a9a9a9',
   },
   divider: {
     borderTopColor: '#D3D3D3',

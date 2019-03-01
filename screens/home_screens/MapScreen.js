@@ -17,7 +17,7 @@ export default class MapScreen extends React.Component {
             let events = res.data.data
             const now = new Date()
             for (i in events) {
-              if (Date.parse(events[i].start_time) < now) {
+              if (Date.parse(events[i].end_time) < now) {
                 events.splice(i, 1)
               }
             }
@@ -34,7 +34,7 @@ export default class MapScreen extends React.Component {
             let savedEvents = JSON.parse(value)
             const now = new Date()
             for (i in savedEvents) {
-              if (Date.parse(savedEvents[i].start_time) < now) {
+              if (Date.parse(savedEvents[i].end_time) < now) {
                 savedEvents.splice(i, 1)
               }
             }

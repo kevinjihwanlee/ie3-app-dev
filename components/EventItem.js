@@ -15,7 +15,7 @@ export class EventItem extends React.Component {
         titleStyle={{left: 5, width:240, fontWeight:'bold'}}
         subtitle={(event.description.length < 110) ? event.description : (event.description.substring(0, 100) + "...")}
         subtitleStyle={{left: 5, width: 250}}
-        rightSubtitle={event.is_saved ? '★ ' + event.saved : '☆ ' + event.saved}
+        rightSubtitle={(event.saved === undefined) ? '☆ ' + '0' : '☆ ' + event.saved}
         rightSubtitleStyle={{top: 35, left: 80}}
         badge={{value: event.date_event, badgeStyle: {backgroundColor: '#4E2A84', top: -35}}}
       />

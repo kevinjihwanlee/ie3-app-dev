@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { EventItem } from '../../components/EventItem';
 import axios from 'axios'
 
@@ -14,9 +14,16 @@ export default class HotScreen extends React.Component {
       payload => {
         axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
           .then(res => {
-            this.setState({events: res.data.data}), () => {
-              this.forceUpdate()
+            let events = res.data.data
+            const now = new Date()
+            for (i in events) {
+              if (Date.parse(events[i].end_time) < now) {
+                events.splice(i, 1)
+              }
             }
+            this.setState({events}), () => {
+              this.forceUpdate()
+            } 
           })
           .catch(err => {
             console.log(err)
@@ -28,8 +35,10 @@ export default class HotScreen extends React.Component {
     render() {
       return (
         <ScrollView style={styles.container}>
-            <EventItem events={this.state.events.sort(function(a, b) {
-              return a.saved - b.saved
+          <Text style={styles.headings}>hot events</Text>
+          <View style={styles.divider}/>
+          <EventItem events={this.state.events.sort(function(a, b) {
+            return b.saved - a.saved
           })}></EventItem>
         </ScrollView>
     );
@@ -50,6 +59,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     height: 120,
     borderRadius: 25,
+  },
+  headings: {
+    fontSize: 50,
+    paddingLeft: 30,
+    color: '#a9a9a9',
+  },
+  divider: {
+    borderTopColor: '#D3D3D3',
+    borderTopWidth: 1,
   },
 });
 
