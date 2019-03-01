@@ -5,7 +5,7 @@ import { createStackNavigator, createMaterialTopTabNavigator, createBottomTabNav
 import TabBarIcon from '../components/TabBarIcon';
 import AddEventScreen from '../screens/AddEventScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import SavedScreen from '../screens/SavedScreen';
 import MapScreen from '../screens/home_screens/MapScreen';
 import NewScreen from '../screens/home_screens/NewScreen';
 import HotScreen from '../screens/home_screens/HotScreen';
@@ -64,11 +64,11 @@ HomeStack.navigationOptions = {
 };
 
 
-const ProfileStack = createStackNavigator({
-  Profile: ProfileScreen,
+const SavedStack = createStackNavigator({
+  Saved: SavedScreen,
 });
 
-ProfileStack.navigationOptions = {
+SavedStack.navigationOptions = {
   tabBarLabel: 'Saved',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -96,7 +96,7 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator(
   {
     HomeStack,
-    ProfileStack,
+    SavedStack,
     SettingsStack,
   },
   {

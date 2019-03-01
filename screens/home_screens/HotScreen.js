@@ -29,7 +29,9 @@ export default class HotScreen extends React.Component {
     render() {
       return (
         <ScrollView style={styles.container}>
-            <EventItem events={this.state.events}></EventItem>
+            <EventItem events={this.state.events.sort(function(a, b) {
+              return a.saved - b.saved
+          })}></EventItem>
         </ScrollView>
     );
   }

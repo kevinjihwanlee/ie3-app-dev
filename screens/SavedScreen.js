@@ -87,9 +87,9 @@ const created_events = [
 ];
 
 
-export default class ProfileScreen extends React.Component {
+export default class SavedScreen extends React.Component {
   static navigationOptions = {
-    title: 'Profile',
+    title: 'Saved',
     headerStyle: {
       backgroundColor: '#4E2A84', // northwestern purple
     },
