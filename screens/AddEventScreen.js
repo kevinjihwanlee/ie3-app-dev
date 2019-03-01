@@ -21,10 +21,10 @@ export default class AddEventScreen extends React.Component {
           .catch(err => {
             console.log(err)
           })
-          
+
         try {
           AsyncStorage.getItem('myEvents').then((value) => {
-            this.state.myEvents = JSON.parse(value)
+            this.setState({myEvents: JSON.parse(value)})
           })
         } catch (error) {
           console.log(error.message)

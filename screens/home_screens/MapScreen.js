@@ -24,7 +24,7 @@ export default class MapScreen extends React.Component {
 
         try {
           AsyncStorage.getItem('saved').then((value) => {
-            this.state.savedEvents = JSON.parse(value)
+            this.setState({savedEvents: JSON.parse(value)})
           })
         } catch (error) {
           console.log(error.message)
@@ -32,11 +32,13 @@ export default class MapScreen extends React.Component {
     
         try {
           AsyncStorage.getItem('myEvents').then((value) => {
-            this.state.myEvents = JSON.parse(value)
+            this.setState({myEvents: JSON.parse(value)})
           })
         } catch (error) {
           console.log(error.message)
         }
+
+        
       }
     )
   }
@@ -181,9 +183,24 @@ export default class MapScreen extends React.Component {
       myEvents: myEvents,
     })
   
-    AsyncStorage.setItem('saved', JSON.stringify(savedEvents)).then(() => {
-      console.log("saved")
-    })
+    AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
+  }
+
+  isStarred(event) {
+    for (item of this.state.savedEvents) {
+      if (event._id === item._id) {
+        return true
+      }
+    }
+    return false
+  }
+
+  getStarText(event) {
+    if (this.isStarred(event)) {
+      return 1
+    } else {
+      return 0
+    }
   }
 
 
@@ -279,7 +296,7 @@ export default class MapScreen extends React.Component {
               <Text>Star Event</Text>
             </TouchableOpacity>
             <Text>{this.getRecentMarker().name}</Text>
-            <Text>{this.getRecentMarker().saved}</Text>
+            <Text>{this.getStarText(this.getRecentMarker())}</Text>
             <Text>{this.getRecentMarker().description}</Text>
             <Text>{this.getRecentMarker().location}</Text>
             <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
