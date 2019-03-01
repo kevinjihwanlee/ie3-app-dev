@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Image, AsyncStorage} from 'react-native';
+import {Platform, StyleSheet, View, Text, TouchableOpacity, Image, AsyncStorage} from 'react-native';
 import MapView from 'react-native-maps';
 import Overlay from 'react-native-modal-overlay';
-import axios from 'axios'
+import axios from 'axios';
+import { Icon } from 'expo';
 import HideView from '../../components/HideView.js'
 
 export default class MapScreen extends React.Component {
@@ -369,7 +370,11 @@ export default class MapScreen extends React.Component {
           </View>
           
           <View style={styles.numSaved}>
-            <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
+            <Icon.Ionicons
+              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+              size={35}
+              style={styles.profileIcon}/>
+            <Text style={styles.savedText}>{(this.getRecentMarker().saved === undefined) ? '  0' : '  ' + this.getRecentMarker().saved}</Text>
           </View>
 
           <HideView hide={this.state.editVisible}>
@@ -466,5 +471,11 @@ const styles = StyleSheet.create({
   },
   numSaved: {
     marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
+  savedText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  }
 });
