@@ -16,7 +16,7 @@ export default class MapScreen extends React.Component {
           .then(res => {
             this.setState({events: res.data.data}), () => {
               this.forceUpdate()
-            } 
+            }
           })
           .catch(err => {
             console.log(err)
