@@ -37,8 +37,6 @@ export default class MapScreen extends React.Component {
         } catch (error) {
           console.log(error.message)
         }
-
-        
       }
     )
   }
