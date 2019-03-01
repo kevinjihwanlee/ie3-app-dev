@@ -1,6 +1,5 @@
 import React from 'react';
-import { Platform, Text, View, ScrollView, StyleSheet } from 'react-native';
-import { Icon } from 'expo';
+import { ScrollView, StyleSheet } from 'react-native';
 import { EventItem } from '../../components/EventItem';
 import axios from 'axios'
 

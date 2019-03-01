@@ -165,7 +165,7 @@ export default class MapScreen extends React.Component {
     return false
   }
 
-  starEvent() {
+  saveEvent() {
     let marker = this.state.recentMarker
 
     let savedEvents = this.state.savedEvents
@@ -203,6 +203,14 @@ export default class MapScreen extends React.Component {
       recentMarker: marker,
       savedEvents: savedEvents,
       myEvents: myEvents,
+    })
+
+    axios.patch(`https://quiet-spire-38612.herokuapp.com/api/events/` + marker._id, {
+      saved: marker.saved,
+    }).then(res => {
+      console.log(res.data)
+    }).catch(err => {
+      console.log(err)
     })
   
     AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
@@ -342,7 +350,7 @@ export default class MapScreen extends React.Component {
           </View>
           
           <View style={styles.starButtonContainerStyle}>
-            <TouchableOpacity onPress = {() => this.starEvent()}>
+            <TouchableOpacity onPress = {() => this.saveEvent()}>
               <Text>{this.getStarText(this.getRecentMarker())}</Text>
             </TouchableOpacity>
           </View>
@@ -376,7 +384,7 @@ export default class MapScreen extends React.Component {
           </View>
 
           <View style={styles.starButtonContainerStyle}>
-            <TouchableOpacity onPress = {() => this.starEvent()}>
+            <TouchableOpacity onPress = {() => this.saveEvent()}>
               <Text>{this.getStarText(this.getRecentMarker())}</Text>
             </TouchableOpacity>
           </View>
