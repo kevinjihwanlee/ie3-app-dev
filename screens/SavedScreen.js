@@ -28,9 +28,15 @@ export default class SavedScreen extends React.Component {
       payload => {
         try {
           AsyncStorage.getItem('saved').then((value) => {
-            this.setState({savedEvents: JSON.parse(value)}), () => {
-              this.forceUpdate()
+            let savedEvents = JSON.parse(value)
+            const now = new Date()
+            for (i in savedEvents) {
+              if (Date.parse(savedEvents[i].start_time) < now) {
+                savedEvents.splice(i, 1)
+              }
             }
+            this.setState({savedEvents})
+            AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
           })
         } catch (error) {
           console.log(error.message)
