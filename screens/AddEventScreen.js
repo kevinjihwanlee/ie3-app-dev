@@ -352,7 +352,9 @@ export default class AddEventScreen extends React.Component {
             </TouchableOpacity>
           </View>
           <Overlay visible = {this.state.calendarVisible}
-            onClose={() => this.onCloseCalendar()} closeOnTouchOutside>
+            onClose={() => this.onCloseCalendar()} closeOnTouchOutside
+            childrenWrapperStyle={styles.calendarStyle}
+            containerStyle={styles.calendarContainer}>
             <Calendar
               date = {this.getTodayDate()}
               hideArrows = {false}
@@ -416,7 +418,9 @@ export default class AddEventScreen extends React.Component {
           </View>
 
           <Overlay visible={this.state.errVisible} closeOnTouchOutside
-            onClose={() => this.hideError()}>
+            onClose={() => this.hideError()}
+            childrenWrapperStyle={styles.errorStyle}
+            containerStyle={styles.errorContainer}>
             <Text>{this.state.errText}</Text>
           </Overlay>
         </ScrollView>
@@ -510,6 +514,13 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     alignItems: 'flex-end',
   },
+  calendarStyle: {
+    borderRadius: 25,
+    alignSelf: 'center',
+  },
+  calendarContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
+  },
   dateText: {
     fontSize: 16,
   },
@@ -566,4 +577,11 @@ const styles = StyleSheet.create({
     height: 215,
     marginTop: 15,
   },
+  errorStyle: {
+    borderRadius: 15,
+    alignSelf: 'center',
+  },
+  errorContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
+  }
 });
