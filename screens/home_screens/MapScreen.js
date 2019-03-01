@@ -110,7 +110,16 @@ export default class MapScreen extends React.Component {
   }
 
   parseViewTime(t) {
-    return t.substring(t.indexOf('T') + 1, t.indexOf('.') - 3)
+    let newTime = t.substring(t.indexOf('T') + 1, t.indexOf('.') - 3)
+    let newPrefix = parseInt(newTime.substring(0, newTime.indexOf(':'))) - 6
+    if (newPrefix < 0) {
+      newPrefix += 24
+    }
+    newPrefix = newPrefix.toString()
+    if (newPrefix.length === 1) {
+      newPrefix = '0' + newPrefix
+    }
+    return newPrefix + newTime.substring(newTime.indexOf(':'))
   }
 
 
