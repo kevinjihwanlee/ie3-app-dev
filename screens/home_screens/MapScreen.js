@@ -41,7 +41,6 @@ export default class MapScreen extends React.Component {
     )
   }
 
-  //Sets state upon screen rendering
   getInitialState() {
     return {
       events: [],
@@ -55,7 +54,6 @@ export default class MapScreen extends React.Component {
   }
 
 
-  //MAP FUNCTIONS
   getRegion() {
     if (this.state.region === null) {
       navigator.geolocation.getCurrentPosition(
@@ -121,7 +119,6 @@ export default class MapScreen extends React.Component {
   }
 
 
-  //ADD EVENT FUNCTIONS
   onAddEventPress() {
     this.setState({
       addingEvent: true,
@@ -135,7 +132,6 @@ export default class MapScreen extends React.Component {
   }
 
 
-  //VIEW EVENT FUNCTIONS
   getRecentMarker() {
     const rm = this.state.recentMarker
     if (rm === null) {
@@ -157,9 +153,11 @@ export default class MapScreen extends React.Component {
   onEditClose = () => this.setState({editModalVisible: false})
 
   isStarred(event) {
-    for (item of this.state.savedEvents) {
-      if (event._id === item._id) {
-        return true
+    if (this.state.events !== null) {
+      for (item of this.state.savedEvents) {
+        if (event._id === item._id) {
+          return true
+        }
       }
     }
     return false
