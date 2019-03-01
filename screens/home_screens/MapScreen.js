@@ -257,6 +257,10 @@ export default class MapScreen extends React.Component {
       .catch(err => {
         console.log(err)
       })
+
+    AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
+    AsyncStorage.setItem('myEvents', JSON.stringify(myEvents))
+
     this.onViewClose()
   }
   
@@ -307,23 +311,36 @@ export default class MapScreen extends React.Component {
 
         <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
           onClose={this.onViewClose}
-          childrenWrapperStyle={styles.viewEventOverlay}>
-          <View>
-            <TouchableOpacity onPress = {() => this.starEvent()}>
-              <Text>Star Event</Text>
-            </TouchableOpacity>
-            <Text>{this.getStarText(this.getRecentMarker())}</Text>
-            <Text>{this.getMyEventText(this.getRecentMarker())}</Text>
+          childrenWrapperStyle={styles.viewEventOverlay}
+          containerStyle={styles.viewEventContainer}>
+
+          <View style={styles.eventNameContainer}>
             <Text>{this.getRecentMarker().name}</Text>
-            <Text>{this.getRecentMarker().description}</Text>
-            <Text>{this.getRecentMarker().location}</Text>
-            <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
-            <Text>{this.getRecentMarker().date_event}</Text>
-            <TouchableOpacity style={styles.modalCancel}
-              onPress = {() => this.deleteEvent()}>
-              <Text>Delete Event</Text>
-            </TouchableOpacity>
           </View>
+          
+          <View style={styles.dateTimeContainer}>
+            <View style={styles.dateContainer}>
+              <Text>{this.getRecentMarker().date_event}</Text>
+            </View>
+            <View style={styles.timeContainer}>
+              <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
+            </View>
+          </View>
+          
+          <View style={styles.locationContainer}>
+            <Text>{this.getRecentMarker().location}</Text>
+          </View>
+
+          <TouchableOpacity onPress = {() => this.starEvent()}>
+            <Text>Star Event</Text>
+          </TouchableOpacity>
+          <Text>{this.getStarText(this.getRecentMarker())}</Text>
+          <Text>{this.getMyEventText(this.getRecentMarker())}</Text>
+          <TouchableOpacity style={styles.modalCancel}
+            onPress = {() => this.deleteEvent()}>
+            <Text>Delete Event</Text>
+          </TouchableOpacity>
+          <Text>{this.getRecentMarker().description}</Text>
         </Overlay>
 
       </View>
@@ -370,11 +387,29 @@ const styles = StyleSheet.create({
     fontSize: 60,
     color: '#4E2A84',
   },
+  viewEventContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
+  },
   viewEventOverlay: {
     marginLeft: 20,
     marginRight: 20,
     marginTop: 20,
-    height: 500,
+    height: 200,
     borderRadius: 25,
+  },
+  eventNameContainer: {
+    alignContent: 'center'
+  },
+  dateTimeContainer: {
+    alignContent: 'center'
+  },
+  dateContainer: {
+    alignContent: 'center'
+  },
+  timeContainer: {
+    alignContent: 'center'
+  },
+  locationContainer: {
+    alignContent: 'center'
   },
 });
