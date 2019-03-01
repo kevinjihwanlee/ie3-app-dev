@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet,Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet,Text, TextInput, View, TouchableOpacity, AsyncStorage } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import Overlay from 'react-native-modal-overlay';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -9,6 +9,28 @@ export default class AddEventScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.getInitialState()
+
+    this.props.navigation.addListener('willFocus', 
+      payload => {
+        axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
+          .then(res => {
+            this.setState({events: res.data.data}), () => {
+              this.forceUpdate()
+            } 
+          })
+          .catch(err => {
+            console.log(err)
+          })
+
+        try {
+          AsyncStorage.getItem('myEvents').then((value) => {
+            this.setState({myEvents: JSON.parse(value)})
+          })
+        } catch (error) {
+          console.log(error.message)
+        }
+      }
+    )
   }
 
   getInitialState() {
@@ -27,6 +49,7 @@ export default class AddEventScreen extends React.Component {
       endTimePickerVisible: false,
       startDatetimeSelected: new Date(),
       endDatetimeSelected: this.addMinutes(60, Date()),
+      myEvents: [],
     }
     initState.calendarSelected[this.getTodayDate()] = true
     
@@ -201,18 +224,31 @@ export default class AddEventScreen extends React.Component {
       coordinate: this.state.recentLocation,
     }
 
+    let myEvents = this.state.myEvents
+    if (myEvents === null) {
+      myEvents = [newEvent]
+    } else {
+      myEvents.push(newEvent)
+    }
+    this.setState({myEvents})
+
+    AsyncStorage.setItem('myEvents', JSON.stringify(myEvents)).then(() => {
+      console.log("Added to My Events")
+    })
+
     axios.post('https://quiet-spire-38612.herokuapp.com/api/events/', newEvent)
       .then(res => {
-        console.log(res.data)
         newEvent._id = res.data.data._id
+      }).then(() => {
+        try {
+          
+        } catch {
+
+        }
       })
       .catch(err => {
         console.log(err)
       })
-
-    let e = this.state.events
-    e.push(newEvent)
-    this.setState({events: e})
 
     this.onCreateClose()
   }
@@ -238,6 +274,10 @@ export default class AddEventScreen extends React.Component {
   }
 
   submitErrors() {
+    if (this.state.eventNameText === '') {
+      this.setState({errText: "Event name cannot be empty.", errVisible: true})
+      return true
+    }
     for (savedEvent of this.state.events) {
       if (this.state.eventNameText === savedEvent.name) {
         this.setState({errText: "Event name already taken.", errVisible: true})
@@ -275,28 +315,28 @@ export default class AddEventScreen extends React.Component {
         </View>
         <ScrollView style={styles.formContainer}>
           <View style={styles.titleContainer}>
-            <TextInput style = {{width: 245,
-                                height: 50,
+            <TextInput style = {{height: 50,
                                 fontSize: 20,
                                 color: this.state.eventNameTextColor}}
               multiline={false}
               value = {this.state.eventNameText}
               onChangeText = {(text) => {this.setState({eventNameText:text})}}
               onFocus = {() => this.onTitleFocus()}
-              onBlur = {() => this.onTitleBlur()}>
+              onBlur = {() => this.onTitleBlur()}
+              onContentSizeChange={() => {}}>
             </TextInput>
           </View>
 
           <View style={styles.locationContainer}>
-            <TextInput style = {{width: 245,
-                                height: 50,
+            <TextInput style = {{height: 50,
                                 fontSize: 20,
                                 color: this.state.customLocationTextColor}}
               multiline={false}
               value = {this.state.customLocationText}
               onChangeText = {(text) => {this.setState({customLocationText:text})}}
               onFocus = {() => this.onCustomLocationFocus()}
-              onBlur = {() => this.onCustomLocationBlur()}>
+              onBlur = {() => this.onCustomLocationBlur()}
+              onContentSizeChange={() => {}}>
             </TextInput>
           </View>
 
@@ -363,15 +403,15 @@ export default class AddEventScreen extends React.Component {
             date={new Date(this.state.endDatetimeSelected)}/>
 
           <View style={styles.descriptionContainer}>
-              <TextInput style = {{width: 245,
-                                  height: 100,
+              <TextInput style = {{height: 100,
                                   fontSize: 14,
                                   color: this.state.eventDescriptionTextColor}}
                 multiline={true}
                 value = {this.state.eventDescriptionText}
                 onChangeText = {(text) => {this.setState({eventDescriptionText:text})}}
                 onFocus = {() => this.onDescriptionFocus()}
-                onBlur = {() => this.onDescriptionBlur()}>
+                onBlur = {() => this.onDescriptionBlur()}
+                onContentSizeChange={() => {}}>
               </TextInput>
           </View>
 
@@ -438,7 +478,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1ecf9'
   },
   titleContainer: {
-    alignItems: 'flex-start',
     borderWidth: 1,
     paddingLeft: 10,
     borderColor: '#ededed',
@@ -447,7 +486,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   locationContainer: {
-    alignItems: 'flex-start',
     borderWidth: 1,
     paddingLeft: 10,
     borderColor: '#ededed',
@@ -458,7 +496,7 @@ const styles = StyleSheet.create({
   dateContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     borderWidth: 1,
     borderColor: '#ededed',
     backgroundColor: '#fff',
@@ -517,7 +555,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   descriptionContainer: {
-    alignItems: 'flex-start',
+    flex: 1,
+    flexDirection: 'row',
+    alignContent: 'flex-start',
     borderWidth: 1,
     paddingLeft: 10,
     paddingTop: 5,

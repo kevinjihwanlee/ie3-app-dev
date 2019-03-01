@@ -14,32 +14,45 @@ export default class MapScreen extends React.Component {
       payload => {
         axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
           .then(res => {
-            this.setState({events: res.data.data})
+            this.setState({events: res.data.data}), () => {
+              this.forceUpdate()
+            } 
           })
           .catch(err => {
             console.log(err)
           })
+
+        try {
+          AsyncStorage.getItem('saved').then((value) => {
+            this.setState({savedEvents: JSON.parse(value)})
+          })
+        } catch (error) {
+          console.log(error.message)
+        }
+    
+        try {
+          AsyncStorage.getItem('myEvents').then((value) => {
+            this.setState({myEvents: JSON.parse(value)})
+          })
+        } catch (error) {
+          console.log(error.message)
+        }
+
+        
       }
     )
   }
 
   //Sets state upon screen rendering
   getInitialState() {
-    try {
-      AsyncStorage.getItem('saved').then((value) => {
-        this.state.savedEvents = JSON.parse(value)
-      })
-    } catch (error) {
-      console.log(error.message)
-      this.state.savedEvents = []
-    }
-
     return {
       events: [],
       region: null,
       recentMarker: null,
       viewModalVisible: false,
       addingEvent: false,
+      savedEvents: [],
+      myEvents: [],
     }
   }
 
@@ -82,15 +95,31 @@ export default class MapScreen extends React.Component {
 
   onMarkerClick(i) {
     if (this.state.addingEvent === false) {
-      this.setState({
-        viewModalVisible: true,
-        recentMarker: i,
-      })
+      if (this.isMyEvent(i)) {
+        this.setState({
+          editModalVisible: true,
+          recentMarker: i,
+        })
+      } else {
+        this.setState({
+          viewModalVisible: true,
+          recentMarker: i,
+        })
+      }
     }
   }
 
   parseViewTime(t) {
-    return t.substring(t.indexOf('T') + 1, t.indexOf('.') - 3)
+    let newTime = t.substring(t.indexOf('T') + 1, t.indexOf('.') - 3)
+    let newPrefix = parseInt(newTime.substring(0, newTime.indexOf(':'))) - 6
+    if (newPrefix < 0) {
+      newPrefix += 24
+    }
+    newPrefix = newPrefix.toString()
+    if (newPrefix.length === 1) {
+      newPrefix = '0' + newPrefix
+    }
+    return newPrefix + newTime.substring(newTime.indexOf(':'))
   }
 
 
@@ -127,24 +156,32 @@ export default class MapScreen extends React.Component {
 
   onViewClose = () => this.setState({viewModalVisible: false})
 
+  onEditClose = () => this.setState({editModalVisible: false})
+
+  isStarred(event) {
+    for (item of this.state.savedEvents) {
+      if (event._id === item._id) {
+        return true
+      }
+    }
+    return false
+  }
 
   starEvent() {
     let marker = this.state.recentMarker
 
     let savedEvents = this.state.savedEvents
-    let removed = false
-    for (i in savedEvents) {
-      if (savedEvents[i]._id === marker._id) {
-        savedEvents.splice(i, 1)
-        removed = true
-        break
+    if (this.isStarred(marker)) {
+      marker.saved -= 1
+      for (i in savedEvents) {
+        if (savedEvents[i]._id === marker._id) {
+          savedEvents.splice(i, 1)
+          break
+        }
       }
-    }
-    if (removed === false) {
+    } else {
       marker.saved += 1
       savedEvents.push(marker)
-    } else {
-      marker.saved -= 1
     }
 
     let events = this.state.events
@@ -154,16 +191,43 @@ export default class MapScreen extends React.Component {
         break
       }
     }
+
+    let myEvents = this.state.myEvents
+    for (i in myEvents) {
+      if (myEvents[i]._id === marker._id) {
+        myEvents[i] = marker
+        break
+      }
+    }
     
     this.setState({
       events: events,
       recentMarker: marker,
       savedEvents: savedEvents,
+      myEvents: myEvents,
     })
   
-    AsyncStorage.setItem('saved', JSON.stringify(savedEvents)).then(() => {
-      console.log(savedEvents)
-    })
+    AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
+  }
+
+  getStarText(event) {
+    if (this.isStarred(event)) {
+      return "Event Saved!"
+    } else {
+      return "Save Event"
+    }
+  }
+
+  isMyEvent(event) {
+    if (event.name === "Error") {
+      return
+    }
+    for (item of this.state.myEvents) {
+      if (event.name === item.name) {
+        return true
+      }
+    }
+    return false
   }
 
 
@@ -171,6 +235,7 @@ export default class MapScreen extends React.Component {
     const rm = this.state.recentMarker
     let events = this.state.events
     let savedEvents = this.state.savedEvents
+    let myEvents = this.state.myEvents
     for (i in events) {
       if (events[i]._id === rm._id) {
         events.splice(i, 1)
@@ -183,9 +248,16 @@ export default class MapScreen extends React.Component {
         break
       }
     }
+    for (i in myEvents) {
+      if (myEvents[i]._id === rm._id) {
+        myEvents.splice(i, 1)
+        break
+      }
+    }
     this.setState({
-      events:events, 
-      savedEvents: savedEvents
+      events: events, 
+      savedEvents: savedEvents,
+      myEvents: myEvents
     })
 
     axios.delete(`https://quiet-spire-38612.herokuapp.com/api/events/` + this.state.recentMarker._id)
@@ -195,7 +267,11 @@ export default class MapScreen extends React.Component {
       .catch(err => {
         console.log(err)
       })
-    this.onViewClose()
+
+    AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
+    AsyncStorage.setItem('myEvents', JSON.stringify(myEvents))
+
+    this.onEditClose()
   }
   
 
@@ -212,7 +288,8 @@ export default class MapScreen extends React.Component {
           moveOnMarkerPress = {false}
           toolbarEnabled = {false}
           onPress = {(e) => {this.onMapClick(e);}}
-          showsUserLocation = {true}>
+          showsUserLocation = {true}
+          userLocationAnnotationTitle = {""}>
           {this.state.events.map((marker) => (
             <MapView.Marker
               key = {marker._id}
@@ -245,22 +322,75 @@ export default class MapScreen extends React.Component {
 
         <Overlay visible={this.state.viewModalVisible} closeOnTouchOutside
           onClose={this.onViewClose}
-          childrenWrapperStyle={styles.viewEventOverlay}>
-          <View>
+          childrenWrapperStyle={styles.viewEventOverlay}
+          containerStyle={styles.viewEventContainer}>
+
+          <View style={styles.eventNameContainer}>
+            <Text style={styles.eventNameText}>{this.getRecentMarker().name}</Text>
+          </View>
+
+          <View style={styles.locationContainer}>
+            <Text style={styles.locationText}>{this.getRecentMarker().location}</Text>
+          </View>
+          
+          <View style={styles.dateTimeContainer}>
+            <Text style={styles.dateTimeText}>
+              {this.getRecentMarker().date_event + "  ~  " + this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}
+            </Text>
+          </View>
+
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descriptionText}>{this.getRecentMarker().description}</Text>
+          </View>
+          
+          <View style={styles.starButtonContainerStyle}>
             <TouchableOpacity onPress = {() => this.starEvent()}>
-              <Text>Star Event</Text>
-            </TouchableOpacity>
-            <Text>{this.getRecentMarker().name}</Text>
-            <Text>{this.getRecentMarker().saved}</Text>
-            <Text>{this.getRecentMarker().description}</Text>
-            <Text>{this.getRecentMarker().location}</Text>
-            <Text>{this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}</Text>
-            <Text>{this.getRecentMarker().date_event}</Text>
-            <TouchableOpacity style={styles.modalCancel}
-              onPress = {() => this.deleteEvent()}>
-              <Text>Delete Event</Text>
+              <Text>{this.getStarText(this.getRecentMarker())}</Text>
             </TouchableOpacity>
           </View>
+          
+          <View style={styles.numSaved}>
+            <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
+          </View>
+
+        </Overlay>
+
+        <Overlay visible={this.state.editModalVisible} closeOnTouchOutside
+          childrenWrapperStyle={styles.editEventOverlay}
+          containerStyle={styles.editEventContainer}
+          onClose={this.onEditClose}>
+          <View style={styles.eventNameContainer}>
+            <Text style={styles.eventNameText}>{this.getRecentMarker().name}</Text>
+          </View>
+
+          <View style={styles.locationContainer}>
+            <Text style={styles.locationText}>{this.getRecentMarker().location}</Text>
+          </View>
+          
+          <View style={styles.dateTimeContainer}>
+            <Text style={styles.dateTimeText}>
+              {this.getRecentMarker().date_event + "  ~  " + this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}
+            </Text>
+          </View>
+
+          <View style={styles.descriptionContainer}>
+            <Text>{this.getRecentMarker().description}</Text>
+          </View>
+
+          <View style={styles.starButtonContainerStyle}>
+            <TouchableOpacity onPress = {() => this.starEvent()}>
+              <Text>{this.getStarText(this.getRecentMarker())}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.numSaved}>
+            <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
+          </View>
+
+          <TouchableOpacity style={styles.modalCancel}
+            onPress = {() => this.deleteEvent()}>
+            <Text>Delete Event</Text>
+          </TouchableOpacity>
         </Overlay>
 
       </View>
@@ -307,11 +437,53 @@ const styles = StyleSheet.create({
     fontSize: 60,
     color: '#4E2A84',
   },
+  viewEventContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
+  },
   viewEventOverlay: {
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20,
-    height: 500,
     borderRadius: 25,
+    backgroundColor: '#fff'
+  },
+  eventNameContainer: {
+    marginTop: 10,
+    alignContent: 'center',
+    justifyContent: 'space-between',
+  },
+  eventNameText: {
+    fontWeight: 'bold',
+    fontSize: 28,
+  },
+  locationContainer: {
+    marginTop: 3,
+  },
+  locationText: {
+    fontStyle: "italic",
+    fontSize: 18,
+  },
+  dateTimeContainer: {
+    marginTop: 3,
+    width: 250,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  dateTimeText: {
+    fontSize: 18,
+  },
+  descriptionContainer: {
+    marginBottom: 12,
+  },
+  starButtonContainerStyle: {
+    marginBottom: 10,
+  },
+  numSaved: {
+    marginBottom: 10,
+  },
+  editEventOverlay: {
+    borderRadius: 25,
+    backgroundColor: '#fff'
+  },
+  editEventContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
   },
 });
