@@ -95,10 +95,17 @@ export default class MapScreen extends React.Component {
 
   onMarkerClick(i) {
     if (this.state.addingEvent === false) {
-      this.setState({
-        viewModalVisible: true,
-        recentMarker: i,
-      })
+      if (this.isMyEvent(i)) {
+        this.setState({
+          editModalVisible: true,
+          recentMarker: i,
+        })
+      } else {
+        this.setState({
+          viewModalVisible: true,
+          recentMarker: i,
+        })
+      }
     }
   }
 
@@ -139,6 +146,8 @@ export default class MapScreen extends React.Component {
   }
 
   onViewClose = () => this.setState({viewModalVisible: false})
+
+  onEditClose = () => this.setState({editModalVisible: false})
 
   isStarred(event) {
     for (item of this.state.savedEvents) {
@@ -194,9 +203,9 @@ export default class MapScreen extends React.Component {
 
   getStarText(event) {
     if (this.isStarred(event)) {
-      return "Starred: 1"
+      return "Event Saved!"
     } else {
-      return "Starred: 0"
+      return "Save Event"
     }
   }
 
@@ -210,14 +219,6 @@ export default class MapScreen extends React.Component {
       }
     }
     return false
-  }
-
-  getMyEventText(event) {
-    if (this.isMyEvent(event)) {
-      return "My Event"
-    } else {
-      return "Not My Event"
-    }
   }
 
 
@@ -261,7 +262,7 @@ export default class MapScreen extends React.Component {
     AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
     AsyncStorage.setItem('myEvents', JSON.stringify(myEvents))
 
-    this.onViewClose()
+    this.onEditClose()
   }
   
 
@@ -278,7 +279,8 @@ export default class MapScreen extends React.Component {
           moveOnMarkerPress = {false}
           toolbarEnabled = {false}
           onPress = {(e) => {this.onMapClick(e);}}
-          showsUserLocation = {true}>
+          showsUserLocation = {true}
+          userLocationAnnotationTitle = {""}>
           {this.state.events.map((marker) => (
             <MapView.Marker
               key = {marker._id}
@@ -328,18 +330,45 @@ export default class MapScreen extends React.Component {
             </Text>
           </View>
 
-          <Text>{this.getRecentMarker().description}</Text>
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descriptionText}>{this.getRecentMarker().description}</Text>
+          </View>
 
           <TouchableOpacity onPress = {() => this.starEvent()}>
-            <Text>Star Event</Text>
+            <Text>{this.getStarText(this.getRecentMarker())}</Text>
           </TouchableOpacity>
-          <Text>{this.getStarText(this.getRecentMarker())}</Text>
-          <Text>{this.getMyEventText(this.getRecentMarker())}</Text>
+          <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
+        </Overlay>
+
+        <Overlay visible={this.state.editModalVisible} closeOnTouchOutside
+          style={styles.editViewContainer}
+          onClose={this.onEditClose}>
+          <View style={styles.eventNameContainer}>
+            <Text style={styles.eventNameText}>{this.getRecentMarker().name}</Text>
+          </View>
+
+          <View style={styles.locationContainer}>
+            <Text style={styles.locationText}>{this.getRecentMarker().location}</Text>
+          </View>
+          
+          <View style={styles.dateTimeContainer}>
+            <Text style={styles.dateTimeText}>
+              {this.getRecentMarker().date_event + "  ~  " + this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}
+            </Text>
+          </View>
+
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descriptionText}>{this.getRecentMarker().description}</Text>
+          </View>
+
+          <TouchableOpacity onPress = {() => this.starEvent()}>
+            <Text>{this.getStarText(this.getRecentMarker())}</Text>
+          </TouchableOpacity>
+          <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
           <TouchableOpacity style={styles.modalCancel}
             onPress = {() => this.deleteEvent()}>
             <Text>Delete Event</Text>
           </TouchableOpacity>
-          
         </Overlay>
 
       </View>
@@ -393,8 +422,9 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginTop: 20,
-    height: 300,
+    height: 250,
     borderRadius: 25,
+    backgroundColor: '#fff'
   },
   eventNameContainer: {
     marginTop: 10,
@@ -421,4 +451,27 @@ const styles = StyleSheet.create({
   dateTimeText: {
     fontSize: 18,
   },
+  descriptionContainer: {
+    marginTop: 12,
+  },
+  descriptionText: {},
+  editViewContainer: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    backgroundColor: '#4E2A84',
+  },
+  editView: {
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+    height: 50,
+    borderRadius: 10,
+  },
+  editText: {
+    color: '#fff',
+  }
 });

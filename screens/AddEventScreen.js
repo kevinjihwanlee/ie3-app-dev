@@ -315,28 +315,28 @@ export default class AddEventScreen extends React.Component {
         </View>
         <ScrollView style={styles.formContainer}>
           <View style={styles.titleContainer}>
-            <TextInput style = {{width: 245,
-                                height: 50,
+            <TextInput style = {{height: 50,
                                 fontSize: 20,
                                 color: this.state.eventNameTextColor}}
               multiline={false}
               value = {this.state.eventNameText}
               onChangeText = {(text) => {this.setState({eventNameText:text})}}
               onFocus = {() => this.onTitleFocus()}
-              onBlur = {() => this.onTitleBlur()}>
+              onBlur = {() => this.onTitleBlur()}
+              onContentSizeChange={() => {}}>
             </TextInput>
           </View>
 
           <View style={styles.locationContainer}>
-            <TextInput style = {{width: 245,
-                                height: 50,
+            <TextInput style = {{height: 50,
                                 fontSize: 20,
                                 color: this.state.customLocationTextColor}}
               multiline={false}
               value = {this.state.customLocationText}
               onChangeText = {(text) => {this.setState({customLocationText:text})}}
               onFocus = {() => this.onCustomLocationFocus()}
-              onBlur = {() => this.onCustomLocationBlur()}>
+              onBlur = {() => this.onCustomLocationBlur()}
+              onContentSizeChange={() => {}}>
             </TextInput>
           </View>
 
@@ -403,15 +403,15 @@ export default class AddEventScreen extends React.Component {
             date={new Date(this.state.endDatetimeSelected)}/>
 
           <View style={styles.descriptionContainer}>
-              <TextInput style = {{width: 245,
-                                  height: 100,
+              <TextInput style = {{height: 100,
                                   fontSize: 14,
                                   color: this.state.eventDescriptionTextColor}}
                 multiline={true}
                 value = {this.state.eventDescriptionText}
                 onChangeText = {(text) => {this.setState({eventDescriptionText:text})}}
                 onFocus = {() => this.onDescriptionFocus()}
-                onBlur = {() => this.onDescriptionBlur()}>
+                onBlur = {() => this.onDescriptionBlur()}
+                onContentSizeChange={() => {}}>
               </TextInput>
           </View>
 
@@ -478,7 +478,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1ecf9'
   },
   titleContainer: {
-    alignItems: 'flex-start',
     borderWidth: 1,
     paddingLeft: 10,
     borderColor: '#ededed',
@@ -487,7 +486,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   locationContainer: {
-    alignItems: 'flex-start',
     borderWidth: 1,
     paddingLeft: 10,
     borderColor: '#ededed',
@@ -557,7 +555,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   descriptionContainer: {
-    alignItems: 'flex-start',
+    flex: 1,
+    flexDirection: 'row',
+    alignContent: 'flex-start',
     borderWidth: 1,
     paddingLeft: 10,
     paddingTop: 5,
