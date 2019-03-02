@@ -38,7 +38,7 @@ export default class NewScreen extends React.Component {
         <Text style={styles.headings}>new events</Text>
         <View style={styles.divider}/>
         <EventItem events={this.state.events.sort(function(a, b) {
-          return Date.parse(b.start_time) - Date.parse(a.start_time)
+          return Date.parse(a.event_date) - Date.parse(b.event_date)
         })}></EventItem>
       </ScrollView>
     );

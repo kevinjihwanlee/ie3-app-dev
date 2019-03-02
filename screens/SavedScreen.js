@@ -102,7 +102,7 @@ export default class SavedScreen extends React.Component {
         </View>
       <Text style={styles.headings}>saved events</Text>
       <View style={styles.divider}/>
-      <EventItem events={this.state.savedEvents.sort(function(a, b) {
+      <EventItem events={this.state.savedEvents.sort(function(a, b) {  
             return Date.parse(b.start_time) - Date.parse(a.start_time)
           })}></EventItem>
       <View style={{height: 20}}/>
