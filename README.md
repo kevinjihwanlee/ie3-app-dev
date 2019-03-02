@@ -22,3 +22,5 @@ This is where veNU comes in. Built entirely in React Native, veNU is a modern, m
 ![Home Screen](/Screenshots/IMG_1599.png?raw=true)
 ![Saved Events](/Screenshots/IMG_1600.png?raw=true)
 ![Hot Screen](/Screenshots/IMG_1601.png?raw=true)
+
+<img src="/Screenshots/IMG_1599.png" width="40%">
