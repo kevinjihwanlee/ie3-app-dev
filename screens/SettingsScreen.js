@@ -21,10 +21,6 @@ export default class SettingsScreen extends React.Component {
     },
   };
 
-  logOut() {
-    console.log("User Logged Out.")
-  }
-
   showOnLockScreen() {
     console.log("Switch Flipped")
   }
@@ -65,11 +61,6 @@ export default class SettingsScreen extends React.Component {
           </View>
         </View>
         <Text style={styles.description}>Require a passcode to enter the app on your phone.</Text>
-        <TouchableOpacity style={styles.button}
-                  onPress={() => this.logOut()}
-                  underlayColor='#fff'>
-                  <Text style={styles.logoutText}>Log Out</Text>
-        </TouchableOpacity>
       </ScrollView>
     );
   }
@@ -145,12 +136,5 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.25,
     borderBottomWidth: 0.25,
     borderColor: '#ededed',
-  },
-  logoutText: {
-    color:'red',
-    textAlign:'center',
-    paddingTop:5,
-    paddingBottom:5,
-    fontSize:20,
   },
 });
