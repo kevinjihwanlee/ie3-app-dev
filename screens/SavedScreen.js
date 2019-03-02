@@ -107,16 +107,6 @@ export default class SavedScreen extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
-       <View style={styles.header}>
-        <Icon.Ionicons
-          name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-          size={110}
-          style={styles.profileIcon}/>
-          <View style={{flexDirection:"column"}}>
-            <Text style={styles.userName}>willie wildcat</Text>
-            <Text style={styles.userDate}>joined: october 18th, 2018</Text>
-          </View>
-        </View>
       <Text style={styles.headings}>saved events</Text>
       <View style={styles.divider}/>
       <EventItem events={this.getSavedEvents().sort(function(a, b) {  
