@@ -28,18 +28,7 @@ export default class SavedScreen extends React.Component {
       payload => {
         try {
           AsyncStorage.getItem('saved').then((value) => {
-            let savedEvents = JSON.parse(value)
-            this.setState({savedEvents})
-          })
-        } catch (error) {
-          console.log(error.message)
-        }
-    
-        try {
-          AsyncStorage.getItem('myEvents').then((value) => {
-            this.setState({myEvents: JSON.parse(value)}), () => {
-              this.forceUpdate()
-            }
+            this.setState({savedEvents: JSON.parse(value)})
           })
         } catch (error) {
           console.log(error.message)
@@ -58,6 +47,22 @@ export default class SavedScreen extends React.Component {
             this.setState({pastEvents}), () => {
               this.forceUpdate()
             }
+
+            AsyncStorage.getItem('myEvents').then((value) => {
+              let myEvents = JSON.parse(value)
+              for (element of myEvents) {
+                for (element2 of events) {
+                  if (element.saved !== element2.saved) {
+                    element.saved = element2.saved
+                    AsyncStorage.setItem('myEvents', JSON.stringify(myEvents))
+                    break
+                  }
+                }
+              }
+              this.setState({myEvents: myEvents}), () => {
+                this.forceUpdate()
+              }
+            })
           })
           .catch(err => {
             console.log(err)
