@@ -106,9 +106,26 @@ export default class AddEventScreen extends React.Component {
   //fires when another day on the calendar is pressed
   onDateChange(date) {
     let selected = {}
-    selected[date.dateString] = {selected: true}
+    const d = date.dateString
+    const dSplit = d.split("-")
+    const year = dSplit[0]
+    const month = dSplit[1]
+    const day = dSplit[2]
+    const oldStartDate = this.state.startDatetimeSelected
+    const oldEndDate = this.state.endDatetimeSelected
+    oldStartDate.setDate(day)
+    oldStartDate.setMonth(month)
+    oldStartDate.setFullYear(year)
+    oldEndDate.setDate(day)
+    oldEndDate.setMonth(month)
+    oldEndDate.setFullYear(year)
+
+    selected[d] = {selected: true}
+    console.log(oldStartDate, oldEndDate)
     this.setState({
-      calendarSelected: selected
+      startDatetimeSelected: oldStartDate,
+      endDatetimeSelected: oldEndDate,
+      calendarSelected: selected,
     })
   }
 
@@ -239,12 +256,6 @@ export default class AddEventScreen extends React.Component {
     axios.post('https://quiet-spire-38612.herokuapp.com/api/events/', newEvent)
       .then(res => {
         newEvent._id = res.data.data._id
-      }).then(() => {
-        try {
-          
-        } catch {
-
-        }
       })
       .catch(err => {
         console.log(err)
@@ -522,7 +533,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.25)",
   },
   dateText: {
-    fontSize: 16,
+    fontSize: 18,
   },
   startTimeContainer: {
     alignItems: 'center',
@@ -542,7 +553,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   startTimeText: {
-    fontSize: 16,
+    fontSize: 18,
   },
   endTimeContainer: {
     alignItems: 'center',
@@ -563,7 +574,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   endTimeText: {
-    fontSize: 16,
+    fontSize: 18,
   },
   descriptionContainer: {
     flex: 1,

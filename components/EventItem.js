@@ -9,17 +9,16 @@ export class EventItem extends React.Component {
   };
   _renderHeader = event => {
     return (
-        <ListItem
-          containerStyle={styles.greyBar}
-          //leftAvatar={{size:'large', source: { uri: 'https://chinesenewyear.imgix.net/assets/images/21-things-you-didnt-know-about-chinese-new-year/chinese-new-year-lanterns.jpg?q=50&w=640&h=360&auto=format' } }}
-          title={event.name}
-          titleStyle={{left:5, width:230, fontWeight:'bold'}}
-          subtitle={(event.description.length < 95) ? event.description : (event.description.substring(0, 85) + "...")}
-          subtitleStyle={{left:5, width: 230}}
-          rightSubtitle={(event.saved === undefined) ? '☆ ' + '0' : '☆ ' + event.saved}
-          rightSubtitleStyle={{top: 35, left: 60}}
-          badge={{value: event.date_event, badgeStyle: {backgroundColor: '#4E2A84', top: -35}}}
-        />
+      <ListItem
+        containerStyle={styles.greyBar}
+        title={event.name}
+        titleStyle={{left: 5, width:240, fontWeight:'bold'}}
+        subtitle={(event.description.length < 110) ? event.description : (event.description.substring(0, 100) + "...")}
+        subtitleStyle={{left: 5, width: 250}}
+        rightSubtitle={(event.saved === undefined) ? '☆ ' + '0' : '☆ ' + event.saved}
+        rightSubtitleStyle={{top: 35, left: 80}}
+        badge={{value: event.date_event, badgeStyle: {backgroundColor: '#4E2A84', top: -35}}}
+      />
     );
   };
 

@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Image, AsyncStorage} from 'react-native';
+import {Platform, StyleSheet, View, Text, TouchableOpacity, Image, AsyncStorage} from 'react-native';
 import MapView from 'react-native-maps';
 import Overlay from 'react-native-modal-overlay';
-import axios from 'axios'
+import axios from 'axios';
+import { Icon } from 'expo';
 import HideView from '../../components/HideView.js'
 
 export default class MapScreen extends React.Component {
@@ -63,11 +64,11 @@ export default class MapScreen extends React.Component {
       recentMarker: null,
       viewModalVisible: false,
       addingEvent: false,
+      editVisible: false,
       savedEvents: [],
       myEvents: [],
     }
   }
-
 
   getRegion() {
     if (this.state.region === null) {
@@ -108,7 +109,8 @@ export default class MapScreen extends React.Component {
     if (this.state.addingEvent === false) {
       if (this.isMyEvent(i)) {
         this.setState({
-          editModalVisible: true,
+          editVisible: true,
+          viewModalVisible: true,
           recentMarker: i,
         })
       } else {
@@ -163,9 +165,7 @@ export default class MapScreen extends React.Component {
     }
   }
 
-  onViewClose = () => this.setState({viewModalVisible: false})
-
-  onEditClose = () => this.setState({editModalVisible: false})
+  onViewClose = () => this.setState({viewModalVisible: false, editVisible: false})
 
   isStarred(event) {
     if (this.state.events !== null && this.state.savedEvents !== null) {
@@ -230,14 +230,6 @@ export default class MapScreen extends React.Component {
     AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
   }
 
-  getStarText(event) {
-    if (this.isStarred(event)) {
-      return "Event Saved!"
-    } else {
-      return "Save Event"
-    }
-  }
-
   isMyEvent(event) {
     if (event.name === "Error") {
       return
@@ -291,7 +283,7 @@ export default class MapScreen extends React.Component {
     AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
     AsyncStorage.setItem('myEvents', JSON.stringify(myEvents))
 
-    this.onEditClose()
+    this.onViewClose()
   }
   
 
@@ -362,57 +354,34 @@ export default class MapScreen extends React.Component {
           <View style={styles.descriptionContainer}>
             <Text style={styles.descriptionText}>{this.getRecentMarker().description}</Text>
           </View>
-          
-          <View style={styles.starButtonContainerStyle}>
-            <TouchableOpacity onPress = {() => this.saveEvent()}>
-              <Text>{this.getStarText(this.getRecentMarker())}</Text>
+
+          <View style={styles.savedBlock}>
+            <View style={styles.numSaved}>
+              <Icon.Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={35}
+                style={styles.profileIcon}/>
+              <Text style={styles.savedNumText}>{(this.getRecentMarker().saved === undefined) ? '  0' : '  ' + this.getRecentMarker().saved}</Text>
+            </View>
+            
+            <View>
+              <TouchableOpacity onPress = {() => this.saveEvent()}>
+                <View style={styles.starButton}>
+                  <Text style={styles.starStyle}>{this.isStarred(this.getRecentMarker()) ? '★' : '☆'}</Text>
+                  <Text style={styles.savedText}>Saved</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <HideView hide={!this.state.editVisible}>
+            <TouchableOpacity style={styles.modalCancel}
+              onPress = {() => this.deleteEvent()}>
+              <Text>Delete Event</Text>
             </TouchableOpacity>
-          </View>
-          
-          <View style={styles.numSaved}>
-            <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
-          </View>
+          </HideView>
 
         </Overlay>
-
-        <Overlay visible={this.state.editModalVisible} closeOnTouchOutside
-          childrenWrapperStyle={styles.editEventOverlay}
-          containerStyle={styles.editEventContainer}
-          onClose={this.onEditClose}>
-          <View style={styles.eventNameContainer}>
-            <Text style={styles.eventNameText}>{this.getRecentMarker().name}</Text>
-          </View>
-
-          <View style={styles.locationContainer}>
-            <Text style={styles.locationText}>{this.getRecentMarker().location}</Text>
-          </View>
-          
-          <View style={styles.dateTimeContainer}>
-            <Text style={styles.dateTimeText}>
-              {this.getRecentMarker().date_event + "  ~  " + this.parseViewTime(this.getRecentMarker().start_time) + " - " + this.parseViewTime(this.getRecentMarker().end_time)}
-            </Text>
-          </View>
-
-          <View style={styles.descriptionContainer}>
-            <Text>{this.getRecentMarker().description}</Text>
-          </View>
-
-          <View style={styles.starButtonContainerStyle}>
-            <TouchableOpacity onPress = {() => this.saveEvent()}>
-              <Text>{this.getStarText(this.getRecentMarker())}</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.numSaved}>
-            <Text>{this.getRecentMarker().saved + ' people have saved this event.'}</Text>
-          </View>
-
-          <TouchableOpacity style={styles.modalCancel}
-            onPress = {() => this.deleteEvent()}>
-            <Text>Delete Event</Text>
-          </TouchableOpacity>
-        </Overlay>
-
       </View>
     )
   }
@@ -466,7 +435,7 @@ const styles = StyleSheet.create({
   },
   eventNameContainer: {
     marginTop: 10,
-    alignContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   eventNameText: {
@@ -493,17 +462,37 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     marginBottom: 12,
   },
-  starButtonContainerStyle: {
+  savedBlock: {
     marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 200,
+  },
+  starStyle: {
+    fontSize: 28,
+  },
+  starButton: {
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: 85,
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  savedText: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   numSaved: {
-    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  editEventOverlay: {
-    borderRadius: 25,
-    backgroundColor: '#fff'
-  },
-  editEventContainer: {
-    backgroundColor: "rgba(0, 0, 0, 0.25)",
-  },
+  savedNumText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  }
 });
