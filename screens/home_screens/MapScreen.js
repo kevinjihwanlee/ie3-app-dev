@@ -189,8 +189,10 @@ export default class MapScreen extends React.Component {
   saveEvent() {
     let marker = this.state.recentMarker
 
-    console.log(this.state.savedEvents)
     let savedEvents = this.state.savedEvents
+    if (savedEvents === null || savedEvents == undefined) {
+      savedEvents = []
+    }
     if (this.isStarred(marker)) {
       marker.saved -= 1
       for (i in savedEvents) {
