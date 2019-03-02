@@ -582,7 +582,7 @@ const styles = StyleSheet.create({
     alignContent: 'flex-start',
     borderWidth: 1,
     paddingLeft: 10,
-    paddingLeft: 10,
+    paddingRight: 10,
     paddingTop: 5,
     borderColor: '#ededed',
     backgroundColor: '#fff',

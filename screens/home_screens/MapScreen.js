@@ -178,6 +178,14 @@ export default class MapScreen extends React.Component {
     return false
   }
 
+  getStarText(event) {
+    if (this.isStarred(event)) {
+      return "Saved"
+    } else {
+      return "Save "
+    }
+  }
+
   saveEvent() {
     let marker = this.state.recentMarker
 
@@ -368,7 +376,7 @@ export default class MapScreen extends React.Component {
               <TouchableOpacity onPress = {() => this.saveEvent()}>
                 <View style={styles.starButton}>
                   <Text style={styles.starStyle}>{this.isStarred(this.getRecentMarker()) ? '★' : '☆'}</Text>
-                  <Text style={styles.savedText}>Saved</Text>
+                  <Text style={styles.savedText}>{this.getStarText(this.getRecentMarker())}</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -377,7 +385,9 @@ export default class MapScreen extends React.Component {
           <HideView hide={!this.state.editVisible}>
             <TouchableOpacity style={styles.modalCancel}
               onPress = {() => this.deleteEvent()}>
-              <Text>Delete Event</Text>
+              <View style={styles.deleteButtonContainer}>
+                <Text style={styles.deleteText}>Delete Event</Text>
+              </View>
             </TouchableOpacity>
           </HideView>
 
@@ -463,7 +473,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   savedBlock: {
-    marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -494,5 +503,20 @@ const styles = StyleSheet.create({
   savedNumText: {
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  deleteButtonContainer: {
+    marginTop: 20,
+    borderColor: 'red',
+    borderWidth: 2,
+    borderRadius: 5,
+    height: 35,
+    width: 110,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'red',
   }
 });
