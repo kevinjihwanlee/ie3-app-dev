@@ -39,7 +39,7 @@ export default class MapScreen extends React.Component {
                 savedEvents.splice(i, 1)
               }
             }
-            this.setState({savedEvents})
+            this.setState({savedEvents: savedEvents})
             AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
           })
         } catch (error) {

@@ -26,13 +26,7 @@ export default class SavedScreen extends React.Component {
     
     this.props.navigation.addListener('willFocus', 
       payload => {
-        try {
-          AsyncStorage.getItem('saved').then((value) => {
-            this.setState({savedEvents: JSON.parse(value)})
-          })
-        } catch (error) {
-          console.log(error.message)
-        }
+
 
         axios.get('https://quiet-spire-38612.herokuapp.com/api/events')
           .then(res => {
@@ -48,18 +42,40 @@ export default class SavedScreen extends React.Component {
               this.forceUpdate()
             }
 
-            AsyncStorage.getItem('myEvents').then((value) => {
-              let myEvents = JSON.parse(value)
-              for (element of myEvents) {
-                for (element2 of events) {
-                  if (element.saved !== element2.saved) {
-                    element.saved = element2.saved
-                    AsyncStorage.setItem('myEvents', JSON.stringify(myEvents))
-                    break
+            AsyncStorage.getItem('saved').then((value) => {
+              let savedEvents = JSON.parse(value)
+              for (i in savedEvents) {
+                let appears = false
+                for (j in events) {
+                  if (savedEvents[i].name === events[j].name) {
+                    appears = true
                   }
                 }
+                if (appears === false) {
+                  savedEvents.splice(i, 1)
+                }
               }
-              this.setState({myEvents: myEvents}), () => {
+              this.setState({savedEvents})
+            })
+
+            AsyncStorage.getItem('myEvents').then((value) => {
+              let myEvents = JSON.parse(value)
+              for (i in myEvents) {
+                let appears = false
+                for (j in events) {
+                  if (myEvents[i].name === events[j].name) {
+                    appears = true
+                    if (myEvents[i].saved !== events[j].saved && myEvents[i].name === events[j].name) {
+                      myEvents[i].saved = events[j].saved
+                    }
+                  }
+                  if (appears === false) {
+                    myEvents.splice(i, 1)
+                  } 
+                }
+              }
+              AsyncStorage.setItem('myEvents', JSON.stringify(myEvents))
+              this.setState({myEvents}), () => {
                 this.forceUpdate()
               }
             })
