@@ -87,6 +87,30 @@ export default class SavedScreen extends React.Component {
     )
   }
 
+  getSavedEvents() {
+    if (this.state.savedEvents === null) {
+      return []
+    } else {
+      return this.state.savedEvents
+    }
+  }
+
+  getMyEvents() {
+    if (this.state.myEvents === null) {
+      return []
+    } else {
+      return this.state.myEvents
+    }
+  }
+
+  getPastEvents() {
+    if (this.state.pastEvents === null) {
+      return []
+    } else {
+      return this.state.pastEvents
+    }
+  }
+
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -102,19 +126,19 @@ export default class SavedScreen extends React.Component {
         </View>
       <Text style={styles.headings}>saved events</Text>
       <View style={styles.divider}/>
-      <EventItem events={this.state.savedEvents.sort(function(a, b) {  
+      <EventItem events={this.getSavedEvents().sort(function(a, b) {  
             return Date.parse(b.start_time) - Date.parse(a.start_time)
           })}></EventItem>
       <View style={{height: 20}}/>
       <Text style={styles.headings}>created events</Text>
       <View style={styles.divider}/>
-      <EventItem events={this.state.myEvents.sort(function(a, b) {
+      <EventItem events={this.getMyEvents().sort(function(a, b) {
             return Date.parse(b.start_time) - Date.parse(a.start_time)
           })}></EventItem>
       <View style={{height: 20}}/>
       <Text style={styles.headings}>past events</Text>
       <View style={styles.divider}/>
-      <EventItem events={this.state.pastEvents.sort(function(a, b) {
+      <EventItem events={this.state.pastEvents().sort(function(a, b) {
             return Date.parse(b.start_time) - Date.parse(a.start_time)
           })}></EventItem>
       <View style={{height: 50}}/>
