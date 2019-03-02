@@ -178,9 +178,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   headings: {
-    fontSize: 50,
-    paddingLeft: 30,
-    color: '#a9a9a9',
+    fontSize: 30,
+    textAlign:'center',
+    color: '#4E2A84',
   },
   divider: {
     borderTopColor: '#D3D3D3',
