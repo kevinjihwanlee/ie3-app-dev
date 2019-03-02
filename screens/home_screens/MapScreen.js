@@ -354,19 +354,24 @@ export default class MapScreen extends React.Component {
           <View style={styles.descriptionContainer}>
             <Text style={styles.descriptionText}>{this.getRecentMarker().description}</Text>
           </View>
-          
-          <View style={styles.starButtonContainerStyle}>
-            <TouchableOpacity onPress = {() => this.saveEvent()}>
-              <Text>{this.isStarred(this.getRecentMarker()) ? '★' : '☆'}</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <View style={styles.numSaved}>
-            <Icon.Ionicons
-              name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
-              size={35}
-              style={styles.profileIcon}/>
-            <Text style={styles.savedText}>{(this.getRecentMarker().saved === undefined) ? '  0' : '  ' + this.getRecentMarker().saved}</Text>
+
+          <View style={styles.savedBlock}>
+            <View style={styles.numSaved}>
+              <Icon.Ionicons
+                name={Platform.OS === 'ios' ? 'ios-contact' : 'md-contact'}
+                size={35}
+                style={styles.profileIcon}/>
+              <Text style={styles.savedNumText}>{(this.getRecentMarker().saved === undefined) ? '  0' : '  ' + this.getRecentMarker().saved}</Text>
+            </View>
+            
+            <View>
+              <TouchableOpacity onPress = {() => this.saveEvent()}>
+                <View style={styles.starButton}>
+                  <Text style={styles.starStyle}>{this.isStarred(this.getRecentMarker()) ? '★' : '☆'}</Text>
+                  <Text style={styles.savedText}>Saved</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <HideView hide={!this.state.editVisible}>
@@ -430,7 +435,7 @@ const styles = StyleSheet.create({
   },
   eventNameContainer: {
     marginTop: 10,
-    alignContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   eventNameText: {
@@ -457,15 +462,36 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     marginBottom: 12,
   },
-  starButtonContainerStyle: {
-    marginBottom: 10,
-  },
-  numSaved: {
+  savedBlock: {
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 200,
+  },
+  starStyle: {
+    fontSize: 28,
+  },
+  starButton: {
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: 85,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   savedText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  numSaved: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  savedNumText: {
     fontWeight: 'bold',
     fontSize: 16,
   }
