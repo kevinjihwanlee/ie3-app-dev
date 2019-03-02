@@ -15,7 +15,7 @@ export class EventItem extends React.Component {
         titleStyle={{left: 5, width:240, fontWeight:'bold'}}
         subtitle={(event.description.length < 110) ? event.description : (event.description.substring(0, 100) + "...")}
         subtitleStyle={{left: 5, width: 250}}
-        rightSubtitle={(event.saved === undefined) ? '★ ' + '0' : '☆ ' + event.saved}
+        rightSubtitle={(event.saved === undefined) ? '☆ ' + '0' : '☆ ' + event.saved}
         rightSubtitleStyle={{top: 35, left: 80}}
         badge={{value: event.date_event, badgeStyle: {backgroundColor: '#4E2A84', top: -35}}}
       />
@@ -39,8 +39,8 @@ export class EventItem extends React.Component {
     return (
       <ListItem
         containerStyle={styles.greyBarExpanded}
-        title={(event.description.length < 110) ? undefined : ("..." + event.description.substring(100) + "\n")}
-        titleStyle={{width: 240, paddingLeft:10, paddingTop:20, fontSize:15}}
+        title={(event.description.length < 95) ? undefined : ("..." + event.description.substring(85) + "\n")}
+        titleStyle={{width: 220, paddingLeft:10, paddingTop:20, fontSize:15}}
         subtitle={'@ ' + event.location}
         subtitleStyle={{fontWeight:'bold', paddingLeft:10, width: 230, textAlignVertical:'top'}}
         rightSubtitle={this.parseViewTime(event.start_time) +  '-\n' + this.parseViewTime(event.end_time)}

@@ -168,7 +168,7 @@ export default class MapScreen extends React.Component {
   onViewClose = () => this.setState({viewModalVisible: false, editVisible: false})
 
   isStarred(event) {
-    if (this.state.events !== null) {
+    if (this.state.events !== null && this.state.savedEvents !== null) {
       for (item of this.state.savedEvents) {
         if (event._id === item._id) {
           return true
