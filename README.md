@@ -19,8 +19,6 @@ At Northwestern University, there lacks a standardized platform for students to 
 This is where veNU comes in. Built entirely in React Native, veNU is a modern, minimalist mobile application to enable students to post about their events and find out about others'. veNU allows users to post and view events in a map format, sort by Hot and New events, and hear about events and groups that they never would have been able to otherwise.
 
 ## Screenshots
-![Home Screen](/Screenshots/IMG_1599.png?raw=true)
-![Saved Events](/Screenshots/IMG_1600.png?raw=true)
-![Hot Screen](/Screenshots/IMG_1601.png?raw=true)
-
 <img src="/Screenshots/IMG_1599.png" width="40%">
+<img src="/Screenshots/IMG_1600.png" width="40%">
+<img src="/Screenshots/IMG_1601.png" width="40%">
