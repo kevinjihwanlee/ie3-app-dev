@@ -238,11 +238,19 @@ export default class MapScreen extends React.Component {
     AsyncStorage.setItem('saved', JSON.stringify(savedEvents))
   }
 
+  getMyEvents() {
+    if (this.state.myEvents === null) {
+      return []
+    } else {
+      return this.state.myEvents
+    }
+  }
+
   isMyEvent(event) {
     if (event.name === "Error") {
       return
     }
-    for (item of this.state.myEvents) {
+    for (item of this.getMyEvents()) {
       if (event.name === item.name) {
         return true
       }
