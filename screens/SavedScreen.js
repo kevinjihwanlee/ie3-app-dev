@@ -61,17 +61,10 @@ export default class SavedScreen extends React.Component {
             AsyncStorage.getItem('myEvents').then((value) => {
               let myEvents = JSON.parse(value)
               for (i in myEvents) {
-                let appears = false
                 for (j in events) {
-                  if (myEvents[i].name === events[j].name) {
-                    appears = true
-                    if (myEvents[i].saved !== events[j].saved && myEvents[i].name === events[j].name) {
-                      myEvents[i].saved = events[j].saved
-                    }
+                  if (myEvents[i].saved !== events[j].saved && myEvents[i].name === events[j].name) {
+                    myEvents[i].saved = events[j].saved
                   }
-                  if (appears === false) {
-                    myEvents.splice(i, 1)
-                  } 
                 }
               }
               AsyncStorage.setItem('myEvents', JSON.stringify(myEvents))
