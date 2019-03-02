@@ -533,7 +533,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.25)",
   },
   dateText: {
-    fontSize: 16,
+    fontSize: 18,
   },
   startTimeContainer: {
     alignItems: 'center',
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   startTimeText: {
-    fontSize: 16,
+    fontSize: 18,
   },
   endTimeContainer: {
     alignItems: 'center',
@@ -574,7 +574,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   endTimeText: {
-    fontSize: 16,
+    fontSize: 18,
   },
   descriptionContainer: {
     flex: 1,
